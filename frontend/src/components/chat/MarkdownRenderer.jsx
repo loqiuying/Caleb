@@ -2,11 +2,18 @@ import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
 import { Box, Link } from '@mui/material';
+import { useTheme } from '@mui/material';
+import CodeBlock from './CodeBlock.jsx';
 
-// Markdown 渲染器（深色主题适配）
-// 支持 GFM（表格、列表、代码块等）与 highlight.js 代码高亮
+/**
+ * Markdown 渲染器：颜色走 token，代码块用 CodeBlock（语言标签+复制按钮+深底）
+ * 用户消息不渲染 Markdown（纯文本 + 换行）
+ */
 export default function MarkdownRenderer({ content, isUser }) {
-  // 用户消息不渲染 Markdown（保持纯文本 + 换行）
+  const theme = useTheme();
+  const t = theme.palette._;
+
+  // 用户消息：纯文本
   if (isUser) {
     return (
       <Box
@@ -15,8 +22,8 @@ export default function MarkdownRenderer({ content, isUser }) {
           whiteSpace: 'pre-wrap',
           wordBreak: 'break-word',
           fontSize: '0.95rem',
-          lineHeight: 1.6,
-          color: '#ffffff',
+          lineHeight: 1.65,
+          color: t.bubbleUserText,
         }}
       >
         {content}
@@ -24,115 +31,96 @@ export default function MarkdownRenderer({ content, isUser }) {
     );
   }
 
-  // AI 消息渲染 Markdown（深色主题）
+  // AI 消息：渲染 Markdown
   return (
     <Box
       className="markdown-body"
       sx={{
-        color: '#E8E8EE',
+        color: t.text,
         '& p': {
-          margin: '0 0 8px 0',
+          margin: '0 0 10px 0',
           fontSize: '0.95rem',
           lineHeight: 1.7,
           '&:last-child': { mb: 0 },
         },
         '& h1, & h2, & h3, & h4, & h5, & h6': {
-          margin: '16px 0 8px 0',
+          margin: '18px 0 8px 0',
           fontWeight: 600,
           lineHeight: 1.3,
-          color: '#ffffff',
+          color: t.text,
         },
-        '& h1': { fontSize: '1.5rem' },
-        '& h2': { fontSize: '1.3rem' },
-        '& h3': { fontSize: '1.15rem' },
+        '& h1': { fontSize: '1.4rem' },
+        '& h2': { fontSize: '1.25rem' },
+        '& h3': { fontSize: '1.1rem' },
         '& h4': { fontSize: '1rem' },
-        '& ul, & ol': {
-          margin: '8px 0',
-          paddingLeft: '1.5em',
-        },
-        '& li': {
-          margin: '4px 0',
-          fontSize: '0.95rem',
-          lineHeight: 1.7,
-        },
+        '& ul, & ol': { margin: '8px 0', paddingLeft: '1.5em' },
+        '& li': { margin: '4px 0', fontSize: '0.95rem', lineHeight: 1.7 },
         '& blockquote': {
-          margin: '8px 0',
-          padding: '4px 12px',
-          borderLeft: '3px solid #4FC3F7',
-          bgcolor: 'rgba(79,195,247,0.08)',
-          color: '#888899',
-          '& p': { margin: 0, color: '#E8E8EE' },
+          margin: '10px 0',
+          padding: '6px 14px',
+          borderLeft: `3px solid ${t.accent}`,
+          bgcolor: t.subtle,
+          color: t.muted,
+          borderRadius: 1,
+          '& p': { margin: 0, color: t.text },
         },
         '& code': {
-          fontFamily:
-            '"JetBrains Mono", "Fira Code", Consolas, Monaco, "Courier New", monospace',
+          fontFamily: theme.typography.fontFamilyCode,
           fontSize: '0.85em',
         },
         // 行内代码
         '& :not(pre) > code': {
           padding: '2px 6px',
           borderRadius: 1,
-          bgcolor: 'rgba(79,195,247,0.12)',
-          color: '#4FC3F7',
+          bgcolor: t.subtle,
+          color: t.accent,
+          border: `1px solid ${t.border}`,
         },
-        // 代码块
-        '& pre': {
-          margin: '8px 0',
-          padding: '12px 16px',
-          borderRadius: 1.5,
-          overflowX: 'auto',
-          bgcolor: '#1e1e28',
-          fontSize: '0.85rem',
-          lineHeight: 1.5,
-          border: '1px solid #252530',
-          '& code': {
-            color: '#abb2bf',
-            bgcolor: 'transparent',
-            padding: 0,
-          },
-        },
+        // pre 由 CodeBlock 组件渲染（下方 components.pre）
         '& table': {
           borderCollapse: 'collapse',
           width: '100%',
-          margin: '8px 0',
+          margin: '10px 0',
           fontSize: '0.9rem',
+          display: 'block',
+          overflowX: 'auto',
         },
         '& th, & td': {
-          border: '1px solid #252530',
+          border: `1px solid ${t.border}`,
           padding: '6px 12px',
           textAlign: 'left',
         },
         '& th': {
-          bgcolor: 'rgba(79,195,247,0.1)',
+          bgcolor: t.subtle,
           fontWeight: 600,
-          color: '#ffffff',
+          color: t.text,
         },
         '& a': {
-          color: '#4FC3F7',
+          color: t.accent,
           textDecoration: 'none',
-          '&:hover': { textDecoration: 'underline', color: '#29B6F6' },
+          '&:hover': { textDecoration: 'underline', color: t.accentHover },
         },
         '& hr': {
           border: 'none',
-          borderTop: '1px solid #252530',
-          margin: '12px 0',
+          borderTop: `1px solid ${t.border}`,
+          margin: '14px 0',
         },
-        '& img': {
-          maxWidth: '100%',
-          borderRadius: 1,
-        },
-        // 强调/粗体/斜体颜色
-        '& strong': { color: '#ffffff', fontWeight: 600 },
-        '& em': { color: '#E8E8EE' },
+        '& img': { maxWidth: '100%', borderRadius: 1 },
+        '& strong': { color: t.text, fontWeight: 700 },
+        '& em': { color: t.text },
       }}
     >
       <ReactMarkdown
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
-          // 链接在新标签页打开
+          // 链接新标签页打开
           a: ({ node, ...props }) => (
             <Link {...props} target="_blank" rel="noopener noreferrer" />
+          ),
+          // 代码块：包装成 CodeBlock（带语言标签 + 复制按钮）
+          pre: ({ node, children, ...props }) => (
+            <CodeBlock {...props}>{children}</CodeBlock>
           ),
         }}
       >

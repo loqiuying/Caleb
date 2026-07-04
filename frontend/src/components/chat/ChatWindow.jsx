@@ -1,5 +1,6 @@
 import { useEffect } from 'react';
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/material';
 import { useSessionStore } from '../../store/sessionStore.js';
 import { useChatStore } from '../../store/chatStore.js';
 import EmptyState from '../layout/EmptyState.jsx';
@@ -8,27 +9,19 @@ import MessageInput from './MessageInput.jsx';
 
 // 聊天主区域
 export default function ChatWindow() {
+  const theme = useTheme();
+  const t = theme.palette._;
   const currentSessionId = useSessionStore((s) => s.currentSessionId);
   const { messages, isStreaming, loadMessages, sendMessage } = useChatStore();
 
-  // 切换会话时加载历史消息
   useEffect(() => {
-    if (currentSessionId) {
-      loadMessages(currentSessionId);
-    }
+    if (currentSessionId) loadMessages(currentSessionId);
   }, [currentSessionId, loadMessages]);
 
-  // 无选中会话：显示空状态
-  if (!currentSessionId) {
-    return <EmptyState />;
-  }
+  if (!currentSessionId) return <EmptyState />;
 
-  // 发送消息
-  const handleSend = (content) => {
-    sendMessage(currentSessionId, content);
-  };
+  const handleSend = (content) => sendMessage(currentSessionId, content);
 
-  // 是否显示"思考中"动画（流式中且 assistant 内容为空）
   const showTyping =
     isStreaming &&
     messages.length > 0 &&
@@ -42,13 +35,10 @@ export default function ChatWindow() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: 0,
-        bgcolor: '#0a0a0f',
+        bgcolor: t.bg,
       }}
     >
-      {/* 消息列表 */}
       <MessageList messages={messages} showTyping={showTyping} />
-
-      {/* 输入区域 */}
       <MessageInput onSend={handleSend} disabled={isStreaming} />
     </Box>
   );

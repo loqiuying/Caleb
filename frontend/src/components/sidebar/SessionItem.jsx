@@ -5,10 +5,14 @@ import {
   Box,
   Typography,
 } from '@mui/material';
+import { useTheme } from '@mui/material';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 
-// 单个会话条目（深色风格）
+// 单个会话条目：颜色走 token
 export default function SessionItem({ session, selected, onSelect, onDelete }) {
+  const theme = useTheme();
+  const t = theme.palette._;
+
   return (
     <ListItemButton
       onClick={onSelect}
@@ -20,13 +24,14 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
         py: 1,
         position: 'relative',
         '&:hover .delete-btn': { opacity: 1 },
-        bgcolor: selected ? 'rgba(79,195,247,0.15)' : 'transparent',
+        bgcolor: selected ? t.accentSoft : 'transparent',
+        transition: 'background-color 0.15s',
         '&.Mui-selected': {
-          bgcolor: 'rgba(79,195,247,0.18)',
-          '&:hover': { bgcolor: 'rgba(79,195,247,0.22)' },
+          bgcolor: t.accentSoft,
+          '&:hover': { bgcolor: t.accentSoft },
         },
         '&:hover': {
-          bgcolor: selected ? 'rgba(79,195,247,0.22)' : 'rgba(255,255,255,0.04)',
+          bgcolor: selected ? t.accentSoft : t.subtle,
         },
         // 左侧选中条
         '&::before': selected
@@ -38,7 +43,7 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
               bottom: 8,
               width: 3,
               borderRadius: 2,
-              bgcolor: '#4FC3F7',
+              bgcolor: t.accent,
             }
           : {},
       }}
@@ -49,7 +54,7 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
             noWrap
             sx={{
               fontWeight: selected ? 600 : 400,
-              color: selected ? '#4FC3F7' : '#ffffff',
+              color: selected ? t.accent : t.text,
               fontSize: '0.9rem',
             }}
           >
@@ -61,7 +66,8 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
             noWrap
             variant="caption"
             sx={{
-              color: selected ? 'rgba(79,195,247,0.7)' : '#888899',
+              color: selected ? t.accent : t.muted,
+              opacity: selected ? 0.8 : 1,
               display: 'block',
               fontSize: '0.72rem',
             }}
@@ -81,7 +87,7 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
           transform: 'translateY(-50%)',
           opacity: 0,
           transition: 'opacity 0.2s',
-          bgcolor: 'rgba(0,0,0,0.3)',
+          bgcolor: 'rgba(0,0,0,0.25)',
           borderRadius: '50%',
         }}
       >
@@ -90,10 +96,10 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
           onClick={onDelete}
           aria-label="删除会话"
           sx={{
-            color: selected ? '#4FC3F7' : '#888899',
+            color: selected ? t.accent : t.muted,
             '&:hover': {
-              color: '#ef5350',
-              bgcolor: 'rgba(239,83,80,0.15)',
+              color: '#ef4444',
+              bgcolor: 'rgba(239,68,68,0.15)',
             },
           }}
         >
@@ -114,21 +120,13 @@ function formatTime(dateStr) {
   const diff = now - date;
   const oneDay = 24 * 60 * 60 * 1000;
 
-  // 今天
   if (date.toDateString() === now.toDateString()) {
     return `今天 ${date.getHours().toString().padStart(2, '0')}:${date
       .getMinutes()
       .toString()
       .padStart(2, '0')}`;
   }
-  // 昨天
-  if (diff < 2 * oneDay) {
-    return '昨天';
-  }
-  // 7 天内
-  if (diff < 7 * oneDay) {
-    return `${Math.floor(diff / oneDay)} 天前`;
-  }
-  // 其他
+  if (diff < 2 * oneDay) return '昨天';
+  if (diff < 7 * oneDay) return `${Math.floor(diff / oneDay)} 天前`;
   return `${date.getMonth() + 1}月${date.getDate()}日`;
 }

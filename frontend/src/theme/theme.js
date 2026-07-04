@@ -1,162 +1,174 @@
 import { createTheme } from '@mui/material/styles';
 
-// 浅蓝色 + 暗色背景 + 微信/QQ 风格主题配置
-// 颜色规范：
-//   背景色：#0a0a0f（主背景）, #13131a（卡片背景）, #1a1a24（侧边栏）
-//   气泡色：#4FC3F7（用户/浅蓝）, #2A2A35（AI/深灰）
-//   文字色：#FFFFFF（主文字）, #888899（次要文字）
-//   强调色：#4FC3F7（浅蓝）, #29B6F6（亮蓝）
-//   输入框：#1E1E28（背景）
-//   分割线：#252530
+/**
+ * 主题配置：深浅色双套，语义化 token
+ *
+ * 颜色规范（深色）：
+ *   背景：#0d1117（主）/ #161b22（表面）/ #1c2128（次级）
+ *   文字：#e6edf3（主）/ #8b949e（次）
+ *   强调：#818cf8（indigo，深色下提亮一档保证对比）
+ *
+ * 颜色规范（浅色）：
+ *   背景：#fafafa（主）/ #ffffff（表面）/ #f4f4f5（次级）
+ *   文字：#1f1f23（主）/ #71717a（次）
+ *   强调：#6366f1（indigo）
+ */
 
-export const COLORS = {
-  // 背景
-  bgMain: '#0a0a0f',
-  bgCard: '#13131a',
-  bgSidebar: '#1a1a24',
-  bgInput: '#1E1E28',
-  // 气泡
-  bubbleUser: '#4FC3F7',
-  bubbleAi: '#2A2A35',
-  // 文字
-  textPrimary: '#FFFFFF',
-  textSecondary: '#888899',
-  // 强调
-  accent: '#4FC3F7',
-  accentBright: '#29B6F6',
-  // 分割线
-  divider: '#252530',
+// 语义化 token：深浅色各一套
+// 组件里通过 useTheme().palette.* 访问，不写死颜色值
+export const tokens = {
+  dark: {
+    bg:          '#0d1117',  // 主背景（GitHub 风，比纯黑通透）
+    surface:     '#161b22',  // 卡片/侧栏/顶栏表面
+    subtle:      '#1c2128',  // 次级背景（hover、代码块外层）
+    border:      '#262c36',  // 极淡边线
+    text:        '#e6edf3',  // 主文字
+    muted:       '#8b949e',  // 次要文字
+    accent:      '#818cf8',  // 强调色（indigo-400，深色下提亮）
+    accentHover: '#6366f1',  // 强调色 hover（indigo-500）
+    accentSoft:  'rgba(129, 140, 248, 0.14)', // 强调色浅底
+    codeBg:      '#11111b',  // 代码块底（catppuccin-mocha）
+    codeText:    '#cdd6f4',
+    bubbleUser:  'rgba(129, 140, 248, 0.16)', // 用户气泡：强调色软底
+    bubbleUserText: '#c7d2fe',
+  },
+  light: {
+    bg:          '#fafafa',
+    surface:     '#ffffff',
+    subtle:      '#f4f4f5',
+    border:      '#ececec',
+    text:        '#1f1f23',
+    muted:       '#71717a',
+    accent:      '#6366f1',  // indigo-500
+    accentHover: '#4f46e5',  // indigo-600
+    accentSoft:  '#eef2ff',  // indigo-50
+    codeBg:      '#1e1e2e',  // 代码块统一深底
+    codeText:    '#cdd6f4',
+    bubbleUser:  '#eef2ff',
+    bubbleUserText: '#4338ca',
+  },
 };
 
-export const theme = createTheme({
-  palette: {
-    mode: 'dark',
-    primary: {
-      main: '#4FC3F7', // 浅蓝主色
-      light: '#29B6F6',
-      dark: '#0288D1',
-      contrastText: '#ffffff',
-    },
-    secondary: {
-      main: '#29B6F6',
-      light: '#4FC3F7',
-      dark: '#0277BD',
-      contrastText: '#ffffff',
-    },
-    background: {
-      default: '#0a0a0f', // 主背景
-      paper: '#13131a', // 卡片/纸面背景
-    },
-    text: {
-      primary: '#FFFFFF',
-      secondary: '#888899',
-    },
-    divider: '#252530',
-    error: {
-      main: '#ef5350',
-    },
-    success: {
-      main: '#66bb6a',
-    },
-    warning: {
-      main: '#ffa726',
-    },
-    info: {
-      main: '#4FC3F7',
-    },
-  },
-  shape: {
-    borderRadius: 12, // 微信风格圆角 12px
-  },
-  shadows: [
-    'none',
-    '0px 1px 3px rgba(0,0,0,0.4),0px 1px 2px rgba(0,0,0,0.3)',
-    '0px 2px 4px rgba(0,0,0,0.4),0px 1px 2px rgba(0,0,0,0.3)',
-    '0px 3px 6px rgba(0,0,0,0.45),0px 2px 4px rgba(0,0,0,0.32)',
-    '0px 4px 8px rgba(0,0,0,0.45),0px 2px 4px rgba(0,0,0,0.32)',
-    '0px 6px 12px rgba(0,0,0,0.5),0px 3px 6px rgba(0,0,0,0.36)',
-    '0px 8px 16px rgba(0,0,0,0.5),0px 4px 8px rgba(0,0,0,0.36)',
-    '0px 10px 20px rgba(0,0,0,0.55),0px 4px 8px rgba(0,0,0,0.36)',
-    '0px 12px 24px rgba(0,0,0,0.55),0px 6px 12px rgba(0,0,0,0.4)',
-    '0px 14px 28px rgba(0,0,0,0.6),0px 6px 12px rgba(0,0,0,0.4)',
-    ...Array(15).fill('0px 16px 32px rgba(0,0,0,0.6),0px 8px 16px rgba(0,0,0,0.44)'),
-  ],
-  typography: {
-    fontFamily:
-      '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", "PingFang SC", "Microsoft YaHei", sans-serif',
-    h6: {
-      fontWeight: 500,
-    },
-    subtitle1: {
-      fontWeight: 500,
-    },
-    button: {
-      textTransform: 'none',
-      fontWeight: 500,
-    },
-  },
-  components: {
-    MuiButton: {
-      defaultProps: {
-        disableElevation: true,
+// 缓存已创建的 theme，避免重复 createTheme
+const cache = { dark: null, light: null };
+
+export function getTheme(mode = 'dark') {
+  if (cache[mode]) return cache[mode];
+  const t = tokens[mode];
+
+  const theme = createTheme({
+    palette: {
+      mode,
+      primary: {
+        main: t.accent,
+        light: t.accent,
+        dark: t.accentHover,
+        contrastText: '#ffffff',
       },
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
+      secondary: {
+        main: t.accentHover,
+        contrastText: '#ffffff',
+      },
+      background: {
+        default: t.bg,
+        paper: t.surface,
+      },
+      text: {
+        primary: t.text,
+        secondary: t.muted,
+      },
+      divider: t.border,
+      error:   { main: '#ef4444' },
+      success: { main: '#22c55e' },
+      warning: { main: '#f59e0b' },
+      info:    { main: t.accent },
+    },
+    shape: { borderRadius: 12 },
+    // 柔和阴影体系：浅色用黑透明，深色用更深的黑
+    shadows: mode === 'dark'
+      ? [
+          'none',
+          '0 1px 2px rgba(0,0,0,0.4)',
+          '0 1px 3px rgba(0,0,0,0.5)',
+          '0 2px 6px rgba(0,0,0,0.5)',
+          '0 4px 12px rgba(0,0,0,0.55)',
+          '0 6px 16px rgba(0,0,0,0.6)',
+          '0 8px 24px rgba(0,0,0,0.6)',
+          '0 12px 32px rgba(0,0,0,0.65)',
+          ...Array(17).fill('0 16px 40px rgba(0,0,0,0.7)'),
+        ]
+      : [
+          'none',
+          '0 1px 2px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.06)',
+          '0 1px 3px rgba(0,0,0,0.05), 0 4px 8px rgba(0,0,0,0.06)',
+          '0 2px 6px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.07)',
+          '0 4px 12px rgba(0,0,0,0.07), 0 6px 16px rgba(0,0,0,0.08)',
+          '0 6px 16px rgba(0,0,0,0.08), 0 8px 24px rgba(0,0,0,0.1)',
+          '0 8px 24px rgba(0,0,0,0.1), 0 12px 32px rgba(0,0,0,0.12)',
+          '0 12px 32px rgba(0,0,0,0.12), 0 16px 40px rgba(0,0,0,0.14)',
+          ...Array(17).fill('0 16px 40px rgba(0,0,0,0.16)'),
+        ],
+    typography: {
+      fontFamily:
+        '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif',
+      fontFamilyCode:
+        '"JetBrains Mono", "Fira Code", ui-monospace, Consolas, Monaco, "Courier New", monospace',
+      h6: { fontWeight: 600 },
+      subtitle1: { fontWeight: 500 },
+      button: { textTransform: 'none', fontWeight: 600 },
+    },
+    components: {
+      MuiButton: {
+        defaultProps: { disableElevation: true },
+        styleOverrides: { root: { borderRadius: 10 } },
+      },
+      MuiPaper: {
+        styleOverrides: { root: { backgroundImage: 'none' } },
+      },
+      MuiListItemButton: {
+        styleOverrides: { root: { borderRadius: 8 } },
+      },
+      MuiAppBar: {
+        styleOverrides: { root: { backgroundImage: 'none' } },
+      },
+      MuiOutlinedInput: {
+        styleOverrides: {
+          root: {
+            '& .MuiOutlinedInput-notchedOutline': { borderColor: t.border },
+          },
         },
       },
-    },
-    MuiPaper: {
-      styleOverrides: {
-        root: {
-          backgroundImage: 'none',
-        },
-      },
-    },
-    MuiListItemButton: {
-      styleOverrides: {
-        root: {
-          borderRadius: 8,
-        },
-      },
-    },
-    MuiAppBar: {
-      styleOverrides: {
-        root: {
-          backgroundImage: 'none',
-        },
-      },
-    },
-    MuiOutlinedInput: {
-      styleOverrides: {
-        root: {
-          '& .MuiOutlinedInput-notchedOutline': {
-            borderColor: '#252530',
+      MuiCssBaseline: {
+        styleOverrides: {
+          body: {
+            backgroundColor: t.bg,
+            // 全局过渡：主题切换时颜色平滑变化
+            transition: 'background-color 0.3s ease, color 0.3s ease',
+          },
+          '*::-webkit-scrollbar': { width: 8, height: 8 },
+          '*::-webkit-scrollbar-track': { background: 'transparent' },
+          '*::-webkit-scrollbar-thumb': {
+            background: mode === 'dark'
+              ? 'rgba(255,255,255,0.12)'
+              : 'rgba(0,0,0,0.12)',
+            borderRadius: 8,
+          },
+          '*::-webkit-scrollbar-thumb:hover': {
+            background: mode === 'dark'
+              ? 'rgba(255,255,255,0.22)'
+              : 'rgba(0,0,0,0.22)',
           },
         },
       },
     },
-    MuiCssBaseline: {
-      styleOverrides: {
-        body: {
-          backgroundColor: '#0a0a0f',
-        },
-        // 滚动条适配深色
-        '*::-webkit-scrollbar': {
-          width: 6,
-          height: 6,
-        },
-        '*::-webkit-scrollbar-track': {
-          background: 'transparent',
-        },
-        '*::-webkit-scrollbar-thumb': {
-          background: 'rgba(255,255,255,0.12)',
-          borderRadius: 3,
-        },
-        '*::-webkit-scrollbar-thumb:hover': {
-          background: 'rgba(255,255,255,0.2)',
-        },
-      },
-    },
-  },
-});
+  });
+
+  // 把语义 token 挂到 palette 上，组件里用 theme.palette._.xxx 访问
+  // 用下划线前缀避免和 MUI 内置 key 冲突
+  theme.palette._ = t;
+  cache[mode] = theme;
+  return theme;
+}
+
+// 兼容旧引用（如有）
+export const theme = getTheme('dark');
