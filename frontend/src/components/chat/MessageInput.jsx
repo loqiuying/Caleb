@@ -1,16 +1,17 @@
 import { useState, useRef } from 'react';
 import { Box, TextField, IconButton, Paper } from '@mui/material';
+import { useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import StopIcon from '@mui/icons-material/Stop';
 
-// 微信风格底部输入区
-// 深色背景，圆角深灰输入框，浅蓝圆形发送按钮
+// 底部输入区：颜色走 token，聚焦时浮起
 // Enter 发送，Shift+Enter 换行
 export default function MessageInput({ onSend, disabled }) {
+  const theme = useTheme();
+  const t = theme.palette._;
   const [value, setValue] = useState('');
   const inputRef = useRef(null);
 
-  // 发送消息
   const handleSend = () => {
     const trimmed = value.trim();
     if (!trimmed || disabled) return;
@@ -19,7 +20,6 @@ export default function MessageInput({ onSend, disabled }) {
     setTimeout(() => inputRef.current?.focus(), 0);
   };
 
-  // 键盘事件：Enter 发送，Shift+Enter 换行
   const handleKeyDown = (e) => {
     if (e.key === 'Enter' && !e.shiftKey) {
       e.preventDefault();
@@ -33,8 +33,8 @@ export default function MessageInput({ onSend, disabled }) {
     <Box
       sx={{
         p: { xs: 1.25, md: 1.75 },
-        bgcolor: '#13131a',
-        borderTop: '1px solid #252530',
+        bgcolor: t.surface,
+        borderTop: `1px solid ${t.border}`,
       }}
     >
       <Box
@@ -43,20 +43,20 @@ export default function MessageInput({ onSend, disabled }) {
           margin: '0 auto',
           display: 'flex',
           alignItems: 'flex-end',
-          gap: 1,
+          gap: 1.5,
         }}
       >
         <Paper
           elevation={0}
           sx={{
             flexGrow: 1,
-            borderRadius: 4,
-            bgcolor: '#1E1E28',
-            border: '1px solid #252530',
+            borderRadius: 3,
+            bgcolor: t.subtle,
+            border: `1px solid ${t.border}`,
             transition: 'border-color 0.2s, box-shadow 0.2s',
             '&:focus-within': {
-              borderColor: '#4FC3F7',
-              boxShadow: '0 0 0 2px rgba(79,195,247,0.15)',
+              borderColor: t.accent,
+              boxShadow: `0 0 0 3px ${t.accentSoft}`,
             },
             overflow: 'hidden',
           }}
@@ -75,55 +75,50 @@ export default function MessageInput({ onSend, disabled }) {
             variant="outlined"
             sx={{
               '& .MuiOutlinedInput-root': {
-                borderRadius: 4,
+                borderRadius: 3,
                 border: 'none',
                 py: 0.75,
                 px: 1.75,
                 fontSize: '0.95rem',
                 lineHeight: 1.6,
-                color: '#ffffff',
+                color: t.text,
                 bgcolor: 'transparent',
                 '& fieldset': { border: 'none' },
                 '&.Mui-disabled': {
                   bgcolor: 'transparent',
-                  color: '#888899',
-                  WebkitTextFillColor: '#888899',
-                },
-                '&::placeholder': {
-                  color: '#5a5a6a',
-                  opacity: 1,
+                  color: t.muted,
+                  WebkitTextFillColor: t.muted,
                 },
               },
               '& .MuiInputBase-input::placeholder': {
-                color: '#5a5a6a',
-                opacity: 1,
+                color: t.muted,
+                opacity: 0.7,
               },
             }}
           />
         </Paper>
 
-        {/* 发送按钮：浅蓝圆形 */}
+        {/* 发送按钮：强调色圆形 */}
         <IconButton
           onClick={handleSend}
           disabled={!canSend}
           aria-label="发送"
           sx={{
-            bgcolor: '#4FC3F7',
+            bgcolor: t.accent,
             color: '#ffffff',
             width: 44,
             height: 44,
             borderRadius: '50%',
             transition: 'all 0.2s',
-            boxShadow: canSend
-              ? '0 4px 14px rgba(79,195,247,0.4)'
-              : 'none',
+            boxShadow: canSend ? `0 4px 16px ${t.accentSoft}` : 'none',
             '&:hover': {
-              bgcolor: '#29B6F6',
-              transform: 'scale(1.05)',
+              bgcolor: t.accentHover,
+              transform: 'scale(1.06)',
             },
+            '&:active': { transform: 'scale(0.94)' },
             '&.Mui-disabled': {
-              bgcolor: '#252530',
-              color: '#5a5a6a',
+              bgcolor: t.border,
+              color: t.muted,
               boxShadow: 'none',
             },
           }}

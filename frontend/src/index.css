@@ -3,6 +3,20 @@
   box-sizing: border-box;
 }
 
+/* 三种字体方案：通过 data-font 属性切换 */
+:root,
+[data-font='system'] {
+  --font-app: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
+    'Microsoft YaHei', 'HarmonyOS Sans SC', sans-serif;
+}
+[data-font='noto-sans'] {
+  --font-app: 'Noto Sans SC', -apple-system, 'PingFang SC', 'Microsoft YaHei',
+    sans-serif;
+}
+[data-font='noto-serif'] {
+  --font-app: 'Noto Serif SC', Georgia, 'Songti SC', 'SimSun', serif;
+}
+
 html,
 body,
 #root {
@@ -13,55 +27,46 @@ body,
 }
 
 body {
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
-    'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
+  font-family: var(--font-app);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #0a0a0f;
-  color: #ffffff;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-/* 滚动条样式（深色适配） */
+/* 选中色 */
+::selection {
+  background: rgba(7, 193, 96, 0.2);
+}
+
+/* 滚动条样式（深浅色由 MUI CssBaseline 控制，此处兜底） */
 ::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 8px;
+  height: 8px;
 }
-
 ::-webkit-scrollbar-track {
   background: transparent;
 }
-
 ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.12);
-  border-radius: 3px;
+  background: rgba(128, 128, 128, 0.3);
+  border-radius: 8px;
 }
-
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+  background: rgba(128, 128, 128, 0.5);
 }
-
-/* Firefox 滚动条 */
 * {
   scrollbar-width: thin;
-  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
+  scrollbar-color: rgba(128, 128, 128, 0.3) transparent;
 }
 
-/* 流式光标闪烁动画 */
+/* 流式光标闪烁 */
 @keyframes blink {
-  0%,
-  100% {
-    opacity: 1;
-  }
-  50% {
-    opacity: 0;
-  }
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0; }
 }
 
-/* 思考中动画 */
+/* 思考中三点跳动 */
 @keyframes typing-bounce {
-  0%,
-  80%,
-  100% {
+  0%, 80%, 100% {
     transform: translateY(0);
     opacity: 0.4;
   }
@@ -71,44 +76,30 @@ body {
   }
 }
 
-/* Splash 加载条动画 */
+/* Splash 进度条 */
 @keyframes splash-loading {
-  0% {
-    width: 0%;
-  }
-  50% {
-    width: 70%;
-  }
-  100% {
-    width: 100%;
-  }
+  0% { width: 0%; }
+  50% { width: 70%; }
+  100% { width: 100%; }
 }
-
 @keyframes splash-fade-out {
-  0% {
-    opacity: 1;
-    visibility: visible;
-  }
-  100% {
-    opacity: 0;
-    visibility: hidden;
-  }
+  0% { opacity: 1; visibility: visible; }
+  100% { opacity: 0; visibility: hidden; }
 }
 
-/* Logo 呼吸动画 */
+/* Logo 呼吸 */
 @keyframes logo-pulse {
-  0%,
-  100% {
+  0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 30px rgba(79, 195, 247, 0.35);
+    box-shadow: 0 0 30px rgba(7, 193, 96, 0.35);
   }
   50% {
     transform: scale(1.06);
-    box-shadow: 0 0 50px rgba(79, 195, 247, 0.6);
+    box-shadow: 0 0 50px rgba(7, 193, 96, 0.6);
   }
 }
 
-/* 消息气泡淡入动画 */
+/* 消息进入：上浮淡入 */
 @keyframes message-fade-in {
   0% {
     opacity: 0;
@@ -119,101 +110,28 @@ body {
     transform: translateY(0);
   }
 }
-
 .message-fade-in {
-  animation: message-fade-in 0.25s ease-out;
+  animation: message-fade-in 0.3s ease-out;
 }
 
-/* highlight.js 主题（Atom One Dark 风格） */
+/* highlight.js 主题（Atom One Dark，与 codeBg 搭配） */
 .hljs {
-  color: #abb2bf;
-  background: #1e1e28;
+  color: #cdd6f4;
+  background: transparent;
 }
+.hljs-comment, .hljs-quote { color: #6c7086; font-style: italic; }
+.hljs-doctag, .hljs-keyword, .hljs-formula { color: #cba6f7; }
+.hljs-section, .hljs-name, .hljs-selector-tag, .hljs-deletion, .hljs-subst { color: #f38ba8; }
+.hljs-literal { color: #fab387; }
+.hljs-string, .hljs-regexp, .hljs-addition, .hljs-attribute, .hljs-meta .hljs-string { color: #a6e3a1; }
+.hljs-attr, .hljs-variable, .hljs-template-variable, .hljs-type, .hljs-selector-class, .hljs-selector-attr, .hljs-selector-pseudo, .hljs-number { color: #f9e2af; }
+.hljs-symbol, .hljs-bullet, .hljs-link, .hljs-meta, .hljs-selector-id, .hljs-title { color: #89b4fa; }
+.hljs-built_in, .hljs-title.class_, .hljs-class .hljs-title { color: #f9e2af; }
+.hljs-emphasis { font-style: italic; }
+.hljs-strong { font-weight: bold; }
+.hljs-link { text-decoration: underline; }
 
-.hljs-comment,
-.hljs-quote {
-  color: #5c6370;
-  font-style: italic;
-}
-
-.hljs-doctag,
-.hljs-keyword,
-.hljs-formula {
-  color: #c678dd;
-}
-
-.hljs-section,
-.hljs-name,
-.hljs-selector-tag,
-.hljs-deletion,
-.hljs-subst {
-  color: #e06c75;
-}
-
-.hljs-literal {
-  color: #56b6c2;
-}
-
-.hljs-string,
-.hljs-regexp,
-.hljs-addition,
-.hljs-attribute,
-.hljs-meta .hljs-string {
-  color: #98c379;
-}
-
-.hljs-attr,
-.hljs-variable,
-.hljs-template-variable,
-.hljs-type,
-.hljs-selector-class,
-.hljs-selector-attr,
-.hljs-selector-pseudo,
-.hljs-number {
-  color: #d19a66;
-}
-
-.hljs-symbol,
-.hljs-bullet,
-.hljs-link,
-.hljs-meta,
-.hljs-selector-id,
-.hljs-title {
-  color: #61aeee;
-}
-
-.hljs-built_in,
-.hljs-title.class_,
-.hljs-class .hljs-title {
-  color: #e6c07b;
-}
-
-.hljs-emphasis {
-  font-style: italic;
-}
-
-.hljs-strong {
-  font-weight: bold;
-}
-
-.hljs-link {
-  text-decoration: underline;
-}
-
-/* 代码块容器样式 */
-pre code.hljs {
-  display: block;
-  overflow-x: auto;
-  padding: 12px 16px;
-  background: #1e1e28;
-  border-radius: 8px;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  font-family: 'JetBrains Mono', 'Fira Code', Consolas, Monaco, 'Courier New',
-    monospace;
-}
-
-/* Markdown 表格样式 */
+/* Markdown 表格滚动 */
 .markdown-body table {
   display: block;
   overflow-x: auto;
@@ -221,8 +139,5 @@ pre code.hljs {
 
 /* 移动端适配 */
 @media (max-width: 768px) {
-  html,
-  body {
-    font-size: 14px;
-  }
+  html, body { font-size: 14px; }
 }

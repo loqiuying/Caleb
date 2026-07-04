@@ -1,9 +1,12 @@
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material';
 import SmartToyIcon from '@mui/icons-material/SmartToy';
 
-// 开屏加载页（Splash Screen）
-// 全屏深色背景，居中显示 Logo 与加载进度条，2 秒后淡出
+// 开屏加载页：加载条上方显示 Caleb 字样，2 秒后淡出
 export default function SplashScreen() {
+  const theme = useTheme();
+  const t = theme.palette._;
+
   return (
     <Box
       sx={{
@@ -14,18 +17,17 @@ export default function SplashScreen() {
         flexDirection: 'column',
         alignItems: 'center',
         justifyContent: 'center',
-        bgcolor: '#0a0a0f',
-        // 2 秒后淡出（由父组件卸载，CSS 控制视觉过渡）
+        bgcolor: t.bg,
         animation: 'splash-fade-out 0.5s ease-in 2s forwards',
       }}
     >
-      {/* Logo：80px 圆形，浅蓝色渐变 */}
+      {/* Logo：圆角方形渐变 */}
       <Box
         sx={{
-          width: 80,
-          height: 80,
-          borderRadius: '50%',
-          background: 'linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%)',
+          width: 84,
+          height: 84,
+          borderRadius: 4,
+          background: `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`,
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
@@ -33,29 +35,46 @@ export default function SplashScreen() {
           animation: 'logo-pulse 2s ease-in-out infinite',
         }}
       >
-        <SmartToyIcon sx={{ color: '#ffffff', fontSize: 40 }} />
+        <SmartToyIcon sx={{ color: '#ffffff', fontSize: 42 }} />
       </Box>
 
-      {/* 应用名 */}
+      {/* Caleb 字样：大字号 + 大字距 + 渐变文字 */}
       <Typography
         sx={{
-          color: '#ffffff',
-          fontSize: 24,
-          fontWeight: 600,
+          fontSize: 38,
+          fontWeight: 800,
+          letterSpacing: 6,
+          mb: 1,
+          fontFamily: '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
+          background: `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`,
+          WebkitBackgroundClip: 'text',
+          WebkitTextFillColor: 'transparent',
+          backgroundClip: 'text',
+        }}
+      >
+        CALEB
+      </Typography>
+
+      {/* 副标题 */}
+      <Typography
+        sx={{
+          color: t.muted,
+          fontSize: 13,
+          fontWeight: 400,
           letterSpacing: 2,
           mb: 4,
         }}
       >
-        AI 助手
+        智能对话助手
       </Typography>
 
-      {/* 加载进度条：200px 宽，3px 高，圆角 */}
+      {/* 加载进度条 */}
       <Box
         sx={{
           width: 200,
           height: 3,
           borderRadius: 3,
-          bgcolor: '#1a1a24',
+          bgcolor: t.subtle,
           overflow: 'hidden',
           position: 'relative',
         }}
@@ -67,7 +86,7 @@ export default function SplashScreen() {
             top: 0,
             bottom: 0,
             borderRadius: 3,
-            background: 'linear-gradient(90deg, #4FC3F7 0%, #29B6F6 100%)',
+            background: `linear-gradient(90deg, ${t.accent} 0%, ${t.accentHover} 100%)`,
             animation: 'splash-loading 2s ease-in-out forwards',
           }}
         />

@@ -1,13 +1,13 @@
 {
-  "name": "AI 聊天助手",
-  "short_name": "AI 助手",
-  "description": "智能 AI 聊天助手，支持流式对话、Markdown 排版与代码高亮",
+  "name": "Caleb",
+  "short_name": "Caleb",
+  "description": "Caleb - 智能对话助手，支持流式对话、Markdown 排版与代码高亮",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",
   "orientation": "portrait-primary",
-  "background_color": "#0a0a0f",
-  "theme_color": "#4FC3F7",
+  "background_color": "#111111",
+  "theme_color": "#07C160",
   "lang": "zh-CN",
   "icons": [
     {

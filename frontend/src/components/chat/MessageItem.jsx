@@ -1,116 +1,163 @@
 import { Box, Typography } from '@mui/material';
+import { useTheme } from '@mui/material';
 import MarkdownRenderer from './MarkdownRenderer.jsx';
+import MessageActions from './MessageActions.jsx';
 
-// 微信风格消息气泡
-// 用户消息：右对齐，浅蓝色气泡（#4FC3F7），白色文字，小尖角指向右侧
-// AI 消息：左对齐，深灰色气泡（#2A2A35），浅色文字，小尖角指向左侧
-export default function MessageItem({ message }) {
+/**
+ * 消息气泡（微信/QQ 个人聊天风格）
+ *
+ * 用户：右侧，微信绿气泡，深色文字，右尖角
+ * AI：左侧，白色气泡，左尖角，下方带 hover 工具条
+ * 时间戳：showTime 为 true 时在消息上方居中显示（微信风）
+ */
+export default function MessageItem({ message, showTime }) {
+  const theme = useTheme();
+  const t = theme.palette._;
   const isUser = message.role === 'user';
 
-  // 用户首字母头像
-  const userInitial = '我';
-
-  return (
+  // 气泡本体
+  const bubble = (
     <Box
-      className="message-fade-in"
       sx={{
-        display: 'flex',
-        flexDirection: isUser ? 'row-reverse' : 'row',
-        alignItems: 'flex-start',
-        gap: 1,
-        width: '100%',
+        position: 'relative',
+        maxWidth: { xs: '78%', md: '68%' },
+        borderRadius: 2,
+        px: 2,
+        py: 1.25,
+        bgcolor: isUser ? t.bubbleUser : t.bubbleAi,
+        color: isUser ? t.bubbleUserText : t.bubbleAiText,
+        border: isUser ? 'none' : `1px solid ${t.bubbleAiBorder}`,
+        wordBreak: 'break-word',
+        borderTopRightRadius: isUser ? 0.5 : 2,
+        borderTopLeftRadius: isUser ? 2 : 0.5,
+        boxShadow: theme.palette.mode === 'light'
+          ? '0 1px 2px rgba(0,0,0,0.08)'
+          : '0 1px 2px rgba(0,0,0,0.3)',
+        '&::before': {
+          content: '""',
+          position: 'absolute',
+          top: 14,
+          width: 0,
+          height: 0,
+          borderTop: '7px solid transparent',
+          borderBottom: '7px solid transparent',
+          ...(isUser
+            ? { right: -7, borderLeft: `7px solid ${t.bubbleUser}` }
+            : { left: -7, borderRight: `7px solid ${t.bubbleAi}` }),
+        },
       }}
     >
-      {/* 头像 */}
+      {message.content ? (
+        <MarkdownRenderer content={message.content} isUser={isUser} />
+      ) : (
+        <Typography variant="body2" sx={{ opacity: 0.5, fontSize: '0.95rem' }}>
+          ...
+        </Typography>
+      )}
+
+      {message.streaming && message.content && (
+        <Box
+          component="span"
+          sx={{
+            display: 'inline-block',
+            width: 7,
+            height: 14,
+            ml: 0.5,
+            verticalAlign: 'text-bottom',
+            bgcolor: isUser ? t.bubbleUserText : t.accent,
+            animation: 'blink 1s step-end infinite',
+          }}
+        />
+      )}
+    </Box>
+  );
+
+  // 头像
+  const avatar = (
+    <Box
+      sx={{
+        width: 38,
+        height: 38,
+        borderRadius: 1.5,
+        flexShrink: 0,
+        background: isUser
+          ? `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`
+          : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#ffffff',
+        fontSize: '0.78rem',
+        fontWeight: 700,
+      }}
+    >
+      {isUser ? '我' : 'AI'}
+    </Box>
+  );
+
+  return (
+    <Box className="message-fade-in" sx={{ width: '100%' }}>
+      {/* 时间戳：居中显示 */}
+      {showTime && message.created_at && (
+        <Typography
+          sx={{
+            textAlign: 'center',
+            fontSize: '0.7rem',
+            color: t.muted,
+            mb: 1,
+            opacity: 0.8,
+          }}
+        >
+          {formatChatTime(message.created_at)}
+        </Typography>
+      )}
+
+      {/* 消息行 */}
       <Box
         sx={{
-          width: 36,
-          height: 36,
-          borderRadius: '50%',
-          flexShrink: 0,
-          background: isUser
-            ? 'linear-gradient(135deg, #29B6F6 0%, #0288D1 100%)'
-            : 'linear-gradient(135deg, #4FC3F7 0%, #29B6F6 100%)',
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#ffffff',
-          fontSize: '0.85rem',
-          fontWeight: 600,
-          boxShadow: isUser
-            ? '0 2px 8px rgba(2,136,209,0.3)'
-            : '0 2px 8px rgba(79,195,247,0.3)',
+          flexDirection: isUser ? 'row-reverse' : 'row',
+          alignItems: 'flex-start',
+          gap: 1.25,
         }}
       >
-        {isUser ? userInitial : 'AI'}
-      </Box>
-
-      {/* 消息气泡 + 尖角 */}
-      <Box
-        sx={{
-          position: 'relative',
-          maxWidth: { xs: '80%', md: '70%' },
-          borderRadius: 2,
-          px: 1.75,
-          py: 1.25,
-          bgcolor: isUser ? '#4FC3F7' : '#2A2A35',
-          color: isUser ? '#ffffff' : '#E8E8EE',
-          wordBreak: 'break-word',
-          // 用户气泡右上角圆角较小（贴近头像侧）
-          // AI 气泡左上角圆角较小
-          borderTopRightRadius: isUser ? 4 : 12,
-          borderTopLeftRadius: isUser ? 12 : 4,
-          boxShadow: isUser
-            ? '0 2px 8px rgba(79,195,247,0.25)'
-            : '0 2px 8px rgba(0,0,0,0.3)',
-          // 小尖角
-          '&::before': {
-            content: '""',
-            position: 'absolute',
-            top: 12,
-            width: 0,
-            height: 0,
-            borderTop: '6px solid transparent',
-            borderBottom: '6px solid transparent',
-            ...(isUser
-              ? {
-                  right: -6,
-                  borderLeft: '6px solid #4FC3F7',
-                }
-              : {
-                  left: -6,
-                  borderRight: '6px solid #2A2A35',
-                }),
-          },
-        }}
-      >
-        {message.content ? (
-          <MarkdownRenderer content={message.content} isUser={isUser} />
-        ) : (
-          <Typography
-            variant="body2"
-            sx={{ opacity: 0.6, fontSize: '0.95rem' }}
-          >
-            ...
-          </Typography>
-        )}
-
-        {/* 流式光标 */}
-        {message.streaming && message.content && (
-          <Box
-            component="span"
-            sx={{
-              display: 'inline-block',
-              width: 7,
-              height: 14,
-              ml: 0.5,
-              verticalAlign: 'text-bottom',
-              bgcolor: isUser ? '#ffffff' : '#4FC3F7',
-              animation: 'blink 1s step-end infinite',
-            }}
-          />
-        )}
+        {avatar}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: { xs: '82%', md: '72%' },
+            alignItems: isUser ? 'flex-end' : 'flex-start',
+          }}
+        >
+          {bubble}
+          {message.content && !message.streaming && (
+            <MessageActions message={message} isUser={isUser} />
+          )}
+        </Box>
       </Box>
     </Box>
   );
+}
+
+// 微信风时间格式
+function formatChatTime(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return '';
+  const now = new Date();
+  const hh = date.getHours().toString().padStart(2, '0');
+  const mm = date.getMinutes().toString().padStart(2, '0');
+  const time = `${hh}:${mm}`;
+
+  if (date.toDateString() === now.toDateString()) return time;
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return `昨天 ${time}`;
+
+  const weekDay = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+  if (now - date < oneWeek) return `${weekDay} ${time}`;
+
+  return `${date.getMonth() + 1}月${date.getDate()}日 ${time}`;
 }

@@ -1,12 +1,26 @@
 import { Box } from '@mui/material';
+import { useTheme } from '@mui/material';
 import MessageItem from './MessageItem.jsx';
 import TypingIndicator from './TypingIndicator.jsx';
 import { useAutoScroll } from '../../hooks/useAutoScroll.js';
 
-// 消息列表（深色背景）
+// 消息列表，颜色走 token
 export default function MessageList({ messages, showTyping }) {
-  // 自动滚动到底部
+  const theme = useTheme();
+  const t = theme.palette._;
   const { scrollRef, bottomRef } = useAutoScroll([messages, showTyping]);
+
+  // 判断某条消息是否需要显示时间戳
+  // 规则：第一条显示；之后的消息若与前一条跨分钟则显示
+  const shouldShowTime = (msg, idx) => {
+    if (idx === 0) return true;
+    const prev = messages[idx - 1];
+    const cur = new Date(msg.created_at);
+    const pre = new Date(prev.created_at);
+    if (isNaN(cur) || isNaN(pre)) return false;
+    // 超过 1 分钟显示
+    return cur - pre > 60 * 1000;
+  };
 
   return (
     <Box
@@ -17,7 +31,7 @@ export default function MessageList({ messages, showTyping }) {
         px: { xs: 1.5, md: 3 },
         py: 2.5,
         scrollBehavior: 'smooth',
-        bgcolor: '#0a0a0f',
+        bgcolor: t.bg,
       }}
     >
       <Box
@@ -26,17 +40,17 @@ export default function MessageList({ messages, showTyping }) {
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2,
+          gap: 2.5,
         }}
       >
-        {messages.map((message) => (
-          <MessageItem key={message.id} message={message} />
+        {messages.map((message, idx) => (
+          <MessageItem
+            key={message.id}
+            message={message}
+            showTime={shouldShowTime(message, idx)}
+          />
         ))}
-
-        {/* 思考中动画 */}
         {showTyping && <TypingIndicator />}
-
-        {/* 用于滚动定位的锚点 */}
         <div ref={bottomRef} />
       </Box>
     </Box>
