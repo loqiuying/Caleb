@@ -10,6 +10,18 @@ export default function MessageList({ messages, showTyping }) {
   const t = theme.palette._;
   const { scrollRef, bottomRef } = useAutoScroll([messages, showTyping]);
 
+  // 判断某条消息是否需要显示时间戳
+  // 规则：第一条显示；之后的消息若与前一条跨分钟则显示
+  const shouldShowTime = (msg, idx) => {
+    if (idx === 0) return true;
+    const prev = messages[idx - 1];
+    const cur = new Date(msg.created_at);
+    const pre = new Date(prev.created_at);
+    if (isNaN(cur) || isNaN(pre)) return false;
+    // 超过 1 分钟显示
+    return cur - pre > 60 * 1000;
+  };
+
   return (
     <Box
       ref={scrollRef}
@@ -31,8 +43,12 @@ export default function MessageList({ messages, showTyping }) {
           gap: 2.5,
         }}
       >
-        {messages.map((message) => (
-          <MessageItem key={message.id} message={message} />
+        {messages.map((message, idx) => (
+          <MessageItem
+            key={message.id}
+            message={message}
+            showTime={shouldShowTime(message, idx)}
+          />
         ))}
         {showTyping && <TypingIndicator />}
         <div ref={bottomRef} />

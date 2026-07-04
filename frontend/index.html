@@ -20,27 +20,27 @@
     <!-- Favicon -->
     <link rel="icon" type="image/png" href="/icons/icon-192.png" />
 
-    <!-- Roboto 字体（MUI 推荐） -->
+    <!-- 字体：Roboto + 思源黑体 + 思源宋体（三选一切换） -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&family=Noto+Sans+SC:wght@400;500;700&family=Noto+Serif+SC:wght@400;600;700&display=swap"
       rel="stylesheet"
     />
 
     <title>Caleb</title>
 
-    <!-- 防主题闪烁：在 React 加载前根据存储/系统偏好设置背景色，避免深色用户看到白屏 -->
+    <!-- 防主题闪烁 + 防字体闪烁：在 React 加载前设置好 -->
     <script>
       (function () {
         try {
           var m = localStorage.getItem('color-mode');
-          if (!m) {
-            m = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
-          }
+          if (!m) m = matchMedia('(prefers-color-scheme: light)').matches ? 'light' : 'dark';
           document.documentElement.dataset.mode = m;
-          document.documentElement.style.background =
-            m === 'light' ? '#EDEDED' : '#111111';
+          document.documentElement.style.background = m === 'light' ? '#EDEDED' : '#111111';
+
+          var f = localStorage.getItem('app-font') || 'system';
+          document.documentElement.dataset.font = f;
         } catch (e) {}
       })();
     </script>

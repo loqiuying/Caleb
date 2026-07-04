@@ -102,8 +102,7 @@ export function getTheme(mode = 'dark') {
           ...Array(17).fill('0 16px 40px rgba(0,0,0,0.14)'),
         ],
     typography: {
-      fontFamily:
-        '-apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Roboto, "PingFang SC", "Microsoft YaHei", sans-serif',
+      fontFamily: 'var(--font-app), -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif',
       fontFamilyCode:
         '"JetBrains Mono", "Fira Code", ui-monospace, Consolas, Monaco, "Courier New", monospace',
       h6: { fontWeight: 600 },

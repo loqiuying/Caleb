@@ -1,16 +1,16 @@
-import { AppBar, Toolbar, IconButton, Typography, Box, Tooltip } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
-import DarkModeIcon from '@mui/icons-material/DarkMode';
-import LightModeIcon from '@mui/icons-material/LightMode';
+import { useState } from 'react';
+import { AppBar, Toolbar, IconButton, Typography, Box, Popover, Tooltip } from '@mui/material';
 import { useTheme } from '@mui/material';
+import MenuIcon from '@mui/icons-material/Menu';
+import SettingsIcon from '@mui/icons-material/Settings';
 import { useSessionStore } from '../../store/sessionStore.js';
-import { useColorMode } from '../../App.jsx';
+import Toolbox from './Toolbox.jsx';
 
-// 顶部导航栏：颜色走 token，右侧带深浅色切换
+// 顶部导航栏：颜色走 token，右侧齿轮 → 工具箱浮层
 export default function TopBar({ onMenuClick, showMenuButton }) {
   const theme = useTheme();
   const t = theme.palette._;
-  const { mode, toggle } = useColorMode();
+  const [toolboxEl, setToolboxEl] = useState(null);
 
   const currentSession = useSessionStore((s) => {
     const session = s.sessions.find((x) => x.id === s.currentSessionId);
@@ -36,33 +36,25 @@ export default function TopBar({ onMenuClick, showMenuButton }) {
             color="inherit"
             edge="start"
             onClick={onMenuClick}
-            sx={{
-              mr: 1,
-              color: t.accent,
-              '&:hover': { bgcolor: t.accentSoft },
-            }}
+            sx={{ mr: 1, color: t.accent, '&:hover': { bgcolor: t.accentSoft } }}
             aria-label="菜单"
           >
             <MenuIcon />
           </IconButton>
         )}
 
-        {/* 标题区域 */}
+        {/* 标题 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1, minWidth: 0 }}>
           <Typography
             variant="h6"
             noWrap
-            sx={{
-              color: t.text,
-              fontWeight: 600,
-              fontSize: { xs: '1rem', md: '1.05rem' },
-            }}
+            sx={{ color: t.text, fontWeight: 600, fontSize: { xs: '1rem', md: '1.05rem' } }}
           >
             {title}
           </Typography>
         </Box>
 
-        {/* 右侧：在线状态点 + 主题切换 */}
+        {/* 右侧：在线状态点 + 齿轮按钮 */}
         <Box
           sx={{
             width: 8,
@@ -73,19 +65,42 @@ export default function TopBar({ onMenuClick, showMenuButton }) {
             boxShadow: '0 0 8px rgba(34,197,94,0.6)',
           }}
         />
-        <Tooltip title={mode === 'dark' ? '切换到浅色' : '切换到深色'}>
+        <Tooltip title="工具箱">
           <IconButton
-            onClick={toggle}
+            onClick={(e) => setToolboxEl(e.currentTarget)}
             sx={{
               color: t.muted,
               '&:hover': { bgcolor: t.subtle, color: t.text },
               transition: 'all 0.2s',
+              '&:active': { transform: 'rotate(60deg)' },
             }}
-            aria-label="切换主题"
+            aria-label="工具箱"
           >
-            {mode === 'dark' ? <LightModeIcon /> : <DarkModeIcon />}
+            <SettingsIcon />
           </IconButton>
         </Tooltip>
+
+        {/* 工具箱浮层 */}
+        <Popover
+          open={Boolean(toolboxEl)}
+          anchorEl={toolboxEl}
+          onClose={() => setToolboxEl(null)}
+          anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+          PaperProps={{
+            sx: {
+              bgcolor: 'transparent',
+              boxShadow: 'none',
+              mt: 1,
+            },
+          }}
+        >
+          <Toolbox
+            open={Boolean(toolboxEl)}
+            anchorEl={toolboxEl}
+            onClose={() => setToolboxEl(null)}
+          />
+        </Popover>
       </Toolbar>
     </AppBar>
   );

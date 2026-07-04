@@ -7,14 +7,15 @@ import MessageActions from './MessageActions.jsx';
  * 消息气泡（微信/QQ 个人聊天风格）
  *
  * 用户：右侧，微信绿气泡，深色文字，右尖角
- * AI：左侧，白色气泡（深色下为深灰），左尖角，下方带 hover 工具条
+ * AI：左侧，白色气泡，左尖角，下方带 hover 工具条
+ * 时间戳：showTime 为 true 时在消息上方居中显示（微信风）
  */
-export default function MessageItem({ message }) {
+export default function MessageItem({ message, showTime }) {
   const theme = useTheme();
   const t = theme.palette._;
   const isUser = message.role === 'user';
 
-  // 气泡本体（用户和 AI 共用）
+  // 气泡本体
   const bubble = (
     <Box
       sx={{
@@ -54,7 +55,6 @@ export default function MessageItem({ message }) {
         </Typography>
       )}
 
-      {/* 流式光标 */}
       {message.streaming && message.content && (
         <Box
           component="span"
@@ -72,79 +72,92 @@ export default function MessageItem({ message }) {
     </Box>
   );
 
-  // AI：气泡 + 下方工具条（列布局）
-  if (!isUser) {
-    return (
-      <Box
-        className="message-fade-in"
-        sx={{
-          display: 'flex',
-          flexDirection: 'row',
-          alignItems: 'flex-start',
-          gap: 1.25,
-          width: '100%',
-        }}
-      >
-        <Box
-          sx={{
-            width: 38,
-            height: 38,
-            borderRadius: 1.5,
-            flexShrink: 0,
-            background: 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: '#ffffff',
-            fontSize: '0.78rem',
-            fontWeight: 700,
-          }}
-        >
-          AI
-        </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: { xs: '82%', md: '72%' } }}>
-          {bubble}
-          {message.content && !message.streaming && <MessageActions message={message} />}
-        </Box>
-      </Box>
-    );
-  }
-
-  // 用户：头像 + 气泡 + 下方重发（反向列布局）
-  return (
+  // 头像
+  const avatar = (
     <Box
-      className="message-fade-in"
       sx={{
+        width: 38,
+        height: 38,
+        borderRadius: 1.5,
+        flexShrink: 0,
+        background: isUser
+          ? `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`
+          : 'linear-gradient(135deg, #6366f1 0%, #8b5cf6 100%)',
         display: 'flex',
-        flexDirection: 'row-reverse',
-        alignItems: 'flex-start',
-        gap: 1.25,
-        width: '100%',
+        alignItems: 'center',
+        justifyContent: 'center',
+        color: '#ffffff',
+        fontSize: '0.78rem',
+        fontWeight: 700,
       }}
     >
+      {isUser ? '我' : 'AI'}
+    </Box>
+  );
+
+  return (
+    <Box className="message-fade-in" sx={{ width: '100%' }}>
+      {/* 时间戳：居中显示 */}
+      {showTime && message.created_at && (
+        <Typography
+          sx={{
+            textAlign: 'center',
+            fontSize: '0.7rem',
+            color: t.muted,
+            mb: 1,
+            opacity: 0.8,
+          }}
+        >
+          {formatChatTime(message.created_at)}
+        </Typography>
+      )}
+
+      {/* 消息行 */}
       <Box
         sx={{
-          width: 38,
-          height: 38,
-          borderRadius: 1.5,
-          flexShrink: 0,
-          background: `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`,
           display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: '#ffffff',
-          fontSize: '0.78rem',
-          fontWeight: 700,
+          flexDirection: isUser ? 'row-reverse' : 'row',
+          alignItems: 'flex-start',
+          gap: 1.25,
         }}
       >
-        我
-      </Box>
-      <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: { xs: '82%', md: '72%' }, alignItems: 'flex-end' }}>
-        {bubble}
-        {message.content && !message.streaming && (
-          <MessageActions message={message} isUser />
-        )}
+        {avatar}
+        <Box
+          sx={{
+            display: 'flex',
+            flexDirection: 'column',
+            maxWidth: { xs: '82%', md: '72%' },
+            alignItems: isUser ? 'flex-end' : 'flex-start',
+          }}
+        >
+          {bubble}
+          {message.content && !message.streaming && (
+            <MessageActions message={message} isUser={isUser} />
+          )}
+        </Box>
       </Box>
     </Box>
   );
+}
+
+// 微信风时间格式
+function formatChatTime(dateStr) {
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return '';
+  const now = new Date();
+  const hh = date.getHours().toString().padStart(2, '0');
+  const mm = date.getMinutes().toString().padStart(2, '0');
+  const time = `${hh}:${mm}`;
+
+  if (date.toDateString() === now.toDateString()) return time;
+
+  const yesterday = new Date(now);
+  yesterday.setDate(yesterday.getDate() - 1);
+  if (date.toDateString() === yesterday.toDateString()) return `昨天 ${time}`;
+
+  const weekDay = ['周日', '周一', '周二', '周三', '周四', '周五', '周六'][date.getDay()];
+  const oneWeek = 7 * 24 * 60 * 60 * 1000;
+  if (now - date < oneWeek) return `${weekDay} ${time}`;
+
+  return `${date.getMonth() + 1}月${date.getDate()}日 ${time}`;
 }

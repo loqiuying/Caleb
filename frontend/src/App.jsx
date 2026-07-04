@@ -4,22 +4,31 @@ import { getTheme } from './theme/theme.js';
 import AppLayout from './components/layout/AppLayout.jsx';
 import SplashScreen from './components/SplashScreen.jsx';
 
-// 主题模式 Context：组件树任意位置可读写当前模式
+// 主题模式 Context
 export const ColorModeContext = createContext({
   mode: 'dark',
   toggle: () => {},
 });
-
-// 自定义 hook：方便组件取当前模式与切换函数
 export function useColorMode() {
   return useContext(ColorModeContext);
 }
 
-// 应用根组件：主题 Provider + 深浅色切换 + 开屏页
+// 字体 Context：三种字体方案切换
+export const FONTS = [
+  { id: 'system', name: '系统默认', sample: '永 和 谐' },
+  { id: 'noto-sans', name: '思源黑体', sample: '永 和 谐' },
+  { id: 'noto-serif', name: '思源宋体', sample: '永 和 谐' },
+];
+export const FontContext = createContext({ font: 'system', setFont: () => {} });
+export function useFont() {
+  return useContext(FontContext);
+}
+
+// 应用根组件：主题 + 字体 Provider + 开屏页
 export default function App() {
   const [showSplash, setShowSplash] = useState(true);
 
-  // 初始模式：localStorage 优先，否则跟随系统偏好，默认 dark
+  // 深浅色模式
   const [mode, setMode] = useState(() => {
     const saved = localStorage.getItem('color-mode');
     if (saved === 'light' || saved === 'dark') return saved;
@@ -27,28 +36,40 @@ export default function App() {
     return 'dark';
   });
 
-  // 2.5s 后卸载 splash
+  // 字体方案
+  const [font, setFontState] = useState(() => {
+    return localStorage.getItem('app-font') || 'system';
+  });
+
   useEffect(() => {
     const timer = setTimeout(() => setShowSplash(false), 2500);
     return () => clearTimeout(timer);
   }, []);
 
-  // 持久化 + 写入 <html data-mode> 便于 CSS 适配
   useEffect(() => {
     localStorage.setItem('color-mode', mode);
     document.documentElement.dataset.mode = mode;
   }, [mode]);
 
+  // 字体持久化 + 写入 <html data-font>
+  useEffect(() => {
+    localStorage.setItem('app-font', font);
+    document.documentElement.dataset.font = font;
+  }, [font]);
+
   const toggle = () => setMode((m) => (m === 'dark' ? 'light' : 'dark'));
+  const setFont = (f) => setFontState(f);
   const theme = getTheme(mode);
 
   return (
     <ColorModeContext.Provider value={{ mode, toggle }}>
-      <ThemeProvider theme={theme}>
-        <CssBaseline />
-        {showSplash && <SplashScreen />}
-        <AppLayout />
-      </ThemeProvider>
+      <FontContext.Provider value={{ font, setFont, fonts: FONTS }}>
+        <ThemeProvider theme={theme}>
+          <CssBaseline />
+          {showSplash && <SplashScreen />}
+          <AppLayout />
+        </ThemeProvider>
+      </FontContext.Provider>
     </ColorModeContext.Provider>
   );
 }
