@@ -110,7 +110,7 @@ export default function MessageItem({ message }) {
     );
   }
 
-  // 用户：头像 + 气泡（反向）
+  // 用户：头像 + 气泡 + 下方重发（反向列布局）
   return (
     <Box
       className="message-fade-in"
@@ -139,7 +139,12 @@ export default function MessageItem({ message }) {
       >
         我
       </Box>
-      {bubble}
+      <Box sx={{ display: 'flex', flexDirection: 'column', maxWidth: { xs: '82%', md: '72%' }, alignItems: 'flex-end' }}>
+        {bubble}
+        {message.content && !message.streaming && (
+          <MessageActions message={message} isUser />
+        )}
+      </Box>
     </Box>
   );
 }

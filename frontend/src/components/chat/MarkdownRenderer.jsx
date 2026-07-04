@@ -114,9 +114,9 @@ export default function MarkdownRenderer({ content, isUser }) {
         remarkPlugins={[remarkGfm]}
         rehypePlugins={[rehypeHighlight]}
         components={{
-          // 链接新标签页打开
+          // 链接：当前页跳转（不开新窗口）
           a: ({ node, ...props }) => (
-            <Link {...props} target="_blank" rel="noopener noreferrer" />
+            <Link {...props} />
           ),
           // 代码块：包装成 CodeBlock（带语言标签 + 复制按钮）
           pre: ({ node, children, ...props }) => (

@@ -16,7 +16,7 @@ export default function TopBar({ onMenuClick, showMenuButton }) {
     const session = s.sessions.find((x) => x.id === s.currentSessionId);
     return session;
   });
-  const title = currentSession?.title || 'AI 助手';
+  const title = currentSession?.title || 'Caleb';
 
   return (
     <AppBar

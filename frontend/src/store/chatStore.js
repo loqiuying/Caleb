@@ -186,6 +186,25 @@ export const useChatStore = create((set, get) => ({
     set({ _controller: controller });
   },
 
+  // 重发：从指定 user 消息重新请求
+  // 移除该消息及其后所有消息，重新 sendMessage
+  resendFromMessage: async (sessionId, messageId) => {
+    const { messages, isStreaming } = get();
+    if (isStreaming) return;
+
+    const idx = messages.findIndex((m) => m.id === messageId);
+    if (idx === -1) return;
+    const target = messages[idx];
+    if (target.role !== 'user') return;
+
+    // 移除该消息及之后所有消息
+    const kept = messages.slice(0, idx);
+    set({ messages: kept, streamingContent: '', error: null });
+
+    // 重新发送（sendMessage 会追加 user + assistant 占位并启动流）
+    get().sendMessage(sessionId, target.content);
+  },
+
   // 中止当前流
   abortStream: () => {
     const controller = get()._controller;

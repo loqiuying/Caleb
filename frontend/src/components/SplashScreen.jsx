@@ -65,7 +65,7 @@ export default function SplashScreen() {
           mb: 4,
         }}
       >
-        AI 聊天助手
+        智能对话助手
       </Typography>
 
       {/* 加载进度条 */}
