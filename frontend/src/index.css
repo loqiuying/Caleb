@@ -23,7 +23,7 @@ body {
 
 /* 选中色 */
 ::selection {
-  background: rgba(99, 102, 241, 0.2);
+  background: rgba(7, 193, 96, 0.2);
 }
 
 /* 滚动条样式（深浅色由 MUI CssBaseline 控制，此处兜底） */
@@ -79,11 +79,11 @@ body {
 @keyframes logo-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 30px rgba(99, 102, 241, 0.35);
+    box-shadow: 0 0 30px rgba(7, 193, 96, 0.35);
   }
   50% {
     transform: scale(1.06);
-    box-shadow: 0 0 50px rgba(99, 102, 241, 0.6);
+    box-shadow: 0 0 50px rgba(7, 193, 96, 0.6);
   }
 }
 

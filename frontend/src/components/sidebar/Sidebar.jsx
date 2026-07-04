@@ -89,7 +89,7 @@ export default function Sidebar({ onSelect }) {
               boxShadow: `0 0 8px ${t.accent}`,
             }}
           />
-          AI 助手
+          Caleb
         </Typography>
         {/* 新建会话按钮 */}
         <Button

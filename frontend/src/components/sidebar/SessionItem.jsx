@@ -1,18 +1,105 @@
+import { useState, useRef, useEffect } from 'react';
 import {
   ListItemButton,
   ListItemText,
   IconButton,
   Box,
   Typography,
+  Menu,
+  MenuItem,
+  TextField,
+  ListItemIcon,
 } from '@mui/material';
 import { useTheme } from '@mui/material';
+import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
+import EditIcon from '@mui/icons-material/Edit';
+import { useSessionStore } from '../../store/sessionStore.js';
 
-// 单个会话条目：颜色走 token
+// 单个会话条目：hover 显示 ⋯ 菜单（重命名 / 删除），支持 inline 编辑
 export default function SessionItem({ session, selected, onSelect, onDelete }) {
   const theme = useTheme();
   const t = theme.palette._;
+  const renameSession = useSessionStore((s) => s.renameSession);
 
+  const [menuEl, setMenuEl] = useState(null);
+  const [editing, setEditing] = useState(false);
+  const [draft, setDraft] = useState(session.title || '新对话');
+  const inputRef = useRef(null);
+
+  // 进入编辑模式时聚焦 + 选中文本
+  useEffect(() => {
+    if (editing) {
+      setTimeout(() => {
+        const el = inputRef.current?.querySelector('input');
+        if (el) { el.focus(); el.select(); }
+      }, 0);
+    }
+  }, [editing]);
+
+  const handleMenuOpen = (e) => {
+    e.stopPropagation();
+    setMenuEl(e.currentTarget);
+  };
+  const handleMenuClose = () => setMenuEl(null);
+
+  const startRename = () => {
+    setDraft(session.title || '新对话');
+    setEditing(true);
+    setMenuEl(null);
+  };
+
+  const commitRename = async () => {
+    const trimmed = draft.trim();
+    setEditing(false);
+    if (!trimmed || trimmed === session.title) return;
+    try {
+      await renameSession(session.id, trimmed);
+    } catch (error) {
+      console.error('重命名失败:', error);
+    }
+  };
+
+  const handleEditKey = (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); commitRename(); }
+    else if (e.key === 'Escape') { setEditing(false); }
+  };
+
+  // 编辑态：显示输入框
+  if (editing) {
+    return (
+      <Box
+        sx={{
+          borderRadius: 2,
+          mb: 0.5,
+          px: 1.5,
+          py: 1,
+          bgcolor: t.subtle,
+        }}
+      >
+        <TextField
+          ref={inputRef}
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          onKeyDown={handleEditKey}
+          onBlur={commitRename}
+          size="small"
+          fullWidth
+          variant="standard"
+          sx={{
+            '& .MuiInputBase-input': {
+              fontSize: '0.9rem',
+              color: t.text,
+              padding: '2px 0',
+            },
+          }}
+          InputProps={{ disableUnderline: false }}
+        />
+      </Box>
+    );
+  }
+
+  // 正常态
   return (
     <ListItemButton
       onClick={onSelect}
@@ -23,7 +110,7 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
         px: 1.5,
         py: 1,
         position: 'relative',
-        '&:hover .delete-btn': { opacity: 1 },
+        '&:hover .more-btn': { opacity: 1 },
         bgcolor: selected ? t.accentSoft : 'transparent',
         transition: 'background-color 0.15s',
         '&.Mui-selected': {
@@ -33,7 +120,6 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
         '&:hover': {
           bgcolor: selected ? t.accentSoft : t.subtle,
         },
-        // 左侧选中条
         '&::before': selected
           ? {
               content: '""',
@@ -56,6 +142,7 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
               fontWeight: selected ? 600 : 400,
               color: selected ? t.accent : t.text,
               fontSize: '0.9rem',
+              pr: 3,
             }}
           >
             {session.title || '新对话'}
@@ -77,9 +164,9 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
         }
       />
 
-      {/* 删除按钮：hover 时显示 */}
+      {/* ⋯ 菜单按钮：hover 时显示 */}
       <Box
-        className="delete-btn"
+        className="more-btn"
         sx={{
           position: 'absolute',
           right: 8,
@@ -87,44 +174,76 @@ export default function SessionItem({ session, selected, onSelect, onDelete }) {
           transform: 'translateY(-50%)',
           opacity: 0,
           transition: 'opacity 0.2s',
-          bgcolor: 'rgba(0,0,0,0.25)',
-          borderRadius: '50%',
         }}
       >
         <IconButton
           size="small"
-          onClick={onDelete}
-          aria-label="删除会话"
+          onClick={handleMenuOpen}
+          aria-label="更多操作"
           sx={{
-            color: selected ? t.accent : t.muted,
-            '&:hover': {
-              color: '#ef4444',
-              bgcolor: 'rgba(239,68,68,0.15)',
-            },
+            color: t.muted,
+            p: 0.5,
+            '&:hover': { color: t.text, bgcolor: t.border },
           }}
         >
-          <DeleteOutlineIcon fontSize="small" />
+          <MoreHorizIcon fontSize="small" />
         </IconButton>
       </Box>
+
+      {/* 操作菜单 */}
+      <Menu
+        anchorEl={menuEl}
+        open={Boolean(menuEl)}
+        onClose={handleMenuClose}
+        onClick={(e) => e.stopPropagation()}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            bgcolor: t.surface,
+            border: `1px solid ${t.border}`,
+            borderRadius: 2,
+            boxShadow: 3,
+            minWidth: 140,
+            '& .MuiMenuItem-root': {
+              fontSize: '0.85rem',
+              color: t.text,
+              px: 1.5,
+              py: 1,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={startRename}>
+          <ListItemIcon sx={{ minWidth: 32, color: t.muted }}>
+            <EditIcon sx={{ fontSize: 18 }} />
+          </ListItemIcon>
+          重命名
+        </MenuItem>
+        <MenuItem
+          onClick={(e) => { handleMenuClose(); onDelete(e); }}
+          sx={{ color: '#FA5151 !important' }}
+        >
+          <ListItemIcon sx={{ minWidth: 32, color: '#FA5151' }}>
+            <DeleteOutlineIcon sx={{ fontSize: 18 }} />
+          </ListItemIcon>
+          删除
+        </MenuItem>
+      </Menu>
     </ListItemButton>
   );
 }
 
-// 格式化时间显示
 function formatTime(dateStr) {
   if (!dateStr) return '';
   const date = new Date(dateStr);
   if (isNaN(date.getTime())) return '';
-
   const now = new Date();
   const diff = now - date;
   const oneDay = 24 * 60 * 60 * 1000;
-
   if (date.toDateString() === now.toDateString()) {
     return `今天 ${date.getHours().toString().padStart(2, '0')}:${date
-      .getMinutes()
-      .toString()
-      .padStart(2, '0')}`;
+      .getMinutes().toString().padStart(2, '0')}`;
   }
   if (diff < 2 * oneDay) return '昨天';
   if (diff < 7 * oneDay) return `${Math.floor(diff / oneDay)} 天前`;

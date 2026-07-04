@@ -111,6 +111,81 @@ export const useChatStore = create((set, get) => ({
     set({ _controller: controller });
   },
 
+  // 重新生成：基于最后一条 user 消息，重新请求 AI 回复
+  // 移除最后一条 assistant 消息，重新启动流式（不重复添加 user 消息）
+  regenerateLast: async (sessionId) => {
+    const { messages, isStreaming } = get();
+    if (isStreaming) return;
+
+    // 找最后一条 user 消息
+    const lastUser = [...messages].reverse().find((m) => m.role === 'user');
+    if (!lastUser) return;
+
+    // 移除最后一条 assistant 消息（如果有）
+    let newMessages = messages;
+    if (messages.length > 0 && messages[messages.length - 1].role === 'assistant') {
+      newMessages = messages.slice(0, -1);
+    }
+
+    // 新 assistant 占位
+    const assistantMessage = {
+      id: `temp-assistant-${Date.now()}`,
+      role: 'assistant',
+      content: '',
+      created_at: new Date().toISOString(),
+      streaming: true,
+    };
+
+    set({
+      messages: [...newMessages, assistantMessage],
+      isStreaming: true,
+      streamingContent: '',
+      error: null,
+    });
+
+    const controller = streamChat(
+      sessionId,
+      lastUser.content,
+      (token) => {
+        set((state) => {
+          const newContent = state.streamingContent + token;
+          return {
+            streamingContent: newContent,
+            messages: state.messages.map((m) =>
+              m.id === assistantMessage.id ? { ...m, content: newContent } : m
+            ),
+          };
+        });
+      },
+      () => {
+        set((state) => ({
+          isStreaming: false,
+          streamingContent: '',
+          _controller: null,
+          messages: state.messages.map((m) =>
+            m.id === assistantMessage.id ? { ...m, streaming: false } : m
+          ),
+        }));
+      },
+      (error) => {
+        console.error('重新生成失败:', error);
+        set((state) => ({
+          isStreaming: false,
+          streamingContent: '',
+          _controller: null,
+          error: error.message,
+          messages: state.messages.map((m) =>
+            m.id === assistantMessage.id
+              ? { ...m, streaming: false, content: m.content || `（出错了：${error.message}）` }
+              : m
+          ),
+        }));
+      }
+    );
+
+    set({ _controller: controller });
+  },
+
   // 中止当前流
   abortStream: () => {
     const controller = get()._controller;

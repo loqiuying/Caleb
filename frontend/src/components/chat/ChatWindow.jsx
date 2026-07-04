@@ -12,11 +12,20 @@ export default function ChatWindow() {
   const theme = useTheme();
   const t = theme.palette._;
   const currentSessionId = useSessionStore((s) => s.currentSessionId);
-  const { messages, isStreaming, loadMessages, sendMessage } = useChatStore();
+  const { messages, isStreaming, loadMessages, sendMessage, regenerateLast } = useChatStore();
 
   useEffect(() => {
     if (currentSessionId) loadMessages(currentSessionId);
   }, [currentSessionId, loadMessages]);
+
+  // 监听"重新生成"事件（由 AI 消息工具条触发）
+  useEffect(() => {
+    const handler = () => {
+      if (currentSessionId) regenerateLast(currentSessionId);
+    };
+    window.addEventListener('message:regenerate', handler);
+    return () => window.removeEventListener('message:regenerate', handler);
+  }, [currentSessionId, regenerateLast]);
 
   if (!currentSessionId) return <EmptyState />;
 

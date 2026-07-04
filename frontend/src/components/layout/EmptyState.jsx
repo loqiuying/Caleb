@@ -62,9 +62,9 @@ export default function EmptyState() {
 
       <Typography
         variant="h5"
-        sx={{ mb: 1, fontWeight: 700, color: t.text }}
+        sx={{ mb: 1, fontWeight: 700, color: t.text, letterSpacing: 1 }}
       >
-        欢迎使用 AI 助手
+        Caleb
       </Typography>
 
       <Typography
