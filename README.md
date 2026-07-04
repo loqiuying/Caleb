@@ -1,6 +1,6 @@
-# AI 聊天助手
+# Caleb
 
-> 基于 React + Express + Supabase + DeepSeek 的个人 AI 聊天助手，Material Design 风格，支持 PWA。
+> 基于 React + Express + Supabase + DeepSeek 的个人 Caleb，Material Design 风格，支持 PWA。
 
 ## 技术栈
 
