@@ -13,17 +13,18 @@ body,
 }
 
 body {
-  font-family: 'Roboto', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
-    '微软雅黑', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+    'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #f5f5f5;
+  background-color: #0a0a0f;
+  color: #ffffff;
 }
 
-/* 滚动条样式 */
+/* 滚动条样式（深色适配） */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -31,12 +32,18 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.2);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.12);
+  border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.3);
+  background: rgba(255, 255, 255, 0.22);
+}
+
+/* Firefox 滚动条 */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.15) transparent;
 }
 
 /* 流式光标闪烁动画 */
@@ -64,10 +71,63 @@ body {
   }
 }
 
+/* Splash 加载条动画 */
+@keyframes splash-loading {
+  0% {
+    width: 0%;
+  }
+  50% {
+    width: 70%;
+  }
+  100% {
+    width: 100%;
+  }
+}
+
+@keyframes splash-fade-out {
+  0% {
+    opacity: 1;
+    visibility: visible;
+  }
+  100% {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+/* Logo 呼吸动画 */
+@keyframes logo-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 30px rgba(79, 195, 247, 0.35);
+  }
+  50% {
+    transform: scale(1.06);
+    box-shadow: 0 0 50px rgba(79, 195, 247, 0.6);
+  }
+}
+
+/* 消息气泡淡入动画 */
+@keyframes message-fade-in {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.message-fade-in {
+  animation: message-fade-in 0.25s ease-out;
+}
+
 /* highlight.js 主题（Atom One Dark 风格） */
 .hljs {
   color: #abb2bf;
-  background: #282c34;
+  background: #1e1e28;
 }
 
 .hljs-comment,
@@ -145,7 +205,7 @@ pre code.hljs {
   display: block;
   overflow-x: auto;
   padding: 12px 16px;
-  background: #282c34;
+  background: #1e1e28;
   border-radius: 8px;
   font-size: 0.85rem;
   line-height: 1.5;

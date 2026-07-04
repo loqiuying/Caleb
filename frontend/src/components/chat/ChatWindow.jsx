@@ -5,7 +5,6 @@ import { useChatStore } from '../../store/chatStore.js';
 import EmptyState from '../layout/EmptyState.jsx';
 import MessageList from './MessageList.jsx';
 import MessageInput from './MessageInput.jsx';
-import TypingIndicator from './TypingIndicator.jsx';
 
 // 聊天主区域
 export default function ChatWindow() {
@@ -30,7 +29,9 @@ export default function ChatWindow() {
   };
 
   // 是否显示"思考中"动画（流式中且 assistant 内容为空）
-  const showTyping = isStreaming && messages.length > 0 &&
+  const showTyping =
+    isStreaming &&
+    messages.length > 0 &&
     messages[messages.length - 1].role === 'assistant' &&
     !messages[messages.length - 1].content;
 
@@ -41,7 +42,7 @@ export default function ChatWindow() {
         display: 'flex',
         flexDirection: 'column',
         minHeight: 0,
-        bgcolor: 'background.default',
+        bgcolor: '#0a0a0f',
       }}
     >
       {/* 消息列表 */}

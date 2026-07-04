@@ -7,7 +7,7 @@ import ChatWindow from '../chat/ChatWindow.jsx';
 // 侧边栏宽度
 const DRAWER_WIDTH = 280;
 
-// 应用主布局：响应式 Drawer
+// 应用主布局：深色背景 + 响应式 Drawer
 export default function AppLayout() {
   const theme = useTheme();
   // 桌面端（md 及以上）侧边栏常驻
@@ -28,7 +28,14 @@ export default function AppLayout() {
   const sidebar = <Sidebar onSelect={handleSelect} />;
 
   return (
-    <Box sx={{ display: 'flex', minHeight: '100vh', bgcolor: 'background.default' }}>
+    <Box
+      sx={{
+        display: 'flex',
+        minHeight: '100vh',
+        bgcolor: '#0a0a0f',
+        color: '#ffffff',
+      }}
+    >
       {/* 桌面端：常驻侧边栏 */}
       {isDesktop ? (
         <Box
@@ -36,11 +43,18 @@ export default function AppLayout() {
           sx={{
             width: DRAWER_WIDTH,
             flexShrink: 0,
-            borderRight: '1px solid',
-            borderColor: 'divider',
+            borderRight: '1px solid #252530',
+            bgcolor: '#1a1a24',
           }}
         >
-          <Box sx={{ width: DRAWER_WIDTH, height: '100vh', position: 'sticky', top: 0 }}>
+          <Box
+            sx={{
+              width: DRAWER_WIDTH,
+              height: '100vh',
+              position: 'sticky',
+              top: 0,
+            }}
+          >
             {sidebar}
           </Box>
         </Box>
@@ -51,10 +65,19 @@ export default function AppLayout() {
           open={mobileOpen}
           onClose={handleDrawerToggle}
           ModalProps={{ keepMounted: true }}
+          PaperProps={{
+            sx: {
+              width: DRAWER_WIDTH,
+              bgcolor: '#1a1a24',
+              backgroundImage: 'none',
+              borderRight: '1px solid #252530',
+            },
+          }}
           sx={{
             '& .MuiDrawer-paper': {
               width: DRAWER_WIDTH,
               boxSizing: 'border-box',
+              bgcolor: '#1a1a24',
             },
           }}
         >
@@ -71,10 +94,18 @@ export default function AppLayout() {
           flexDirection: 'column',
           minWidth: 0, // 防止内容溢出
           width: isDesktop ? `calc(100% - ${DRAWER_WIDTH}px)` : '100%',
+          bgcolor: '#0a0a0f',
         }}
       >
         <TopBar onMenuClick={handleDrawerToggle} showMenuButton={!isDesktop} />
-        <Box sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <Box
+          sx={{
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+            minHeight: 0,
+          }}
+        >
           {/* 聊天窗口 */}
           <ChatWindow />
         </Box>

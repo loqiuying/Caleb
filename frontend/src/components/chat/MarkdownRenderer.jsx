@@ -1,9 +1,9 @@
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import rehypeHighlight from 'rehype-highlight';
-import { Box, Typography, Link } from '@mui/material';
+import { Box, Link } from '@mui/material';
 
-// Markdown 渲染器
+// Markdown 渲染器（深色主题适配）
 // 支持 GFM（表格、列表、代码块等）与 highlight.js 代码高亮
 export default function MarkdownRenderer({ content, isUser }) {
   // 用户消息不渲染 Markdown（保持纯文本 + 换行）
@@ -16,6 +16,7 @@ export default function MarkdownRenderer({ content, isUser }) {
           wordBreak: 'break-word',
           fontSize: '0.95rem',
           lineHeight: 1.6,
+          color: '#ffffff',
         }}
       >
         {content}
@@ -23,11 +24,12 @@ export default function MarkdownRenderer({ content, isUser }) {
     );
   }
 
-  // AI 消息渲染 Markdown
+  // AI 消息渲染 Markdown（深色主题）
   return (
     <Box
       className="markdown-body"
       sx={{
+        color: '#E8E8EE',
         '& p': {
           margin: '0 0 8px 0',
           fontSize: '0.95rem',
@@ -38,6 +40,7 @@ export default function MarkdownRenderer({ content, isUser }) {
           margin: '16px 0 8px 0',
           fontWeight: 600,
           lineHeight: 1.3,
+          color: '#ffffff',
         },
         '& h1': { fontSize: '1.5rem' },
         '& h2': { fontSize: '1.3rem' },
@@ -55,31 +58,33 @@ export default function MarkdownRenderer({ content, isUser }) {
         '& blockquote': {
           margin: '8px 0',
           padding: '4px 12px',
-          borderLeft: '3px solid',
-          borderColor: 'primary.main',
-          bgcolor: 'rgba(25,118,210,0.06)',
-          color: 'text.secondary',
-          '& p': { margin: 0 },
+          borderLeft: '3px solid #4FC3F7',
+          bgcolor: 'rgba(79,195,247,0.08)',
+          color: '#888899',
+          '& p': { margin: 0, color: '#E8E8EE' },
         },
         '& code': {
           fontFamily:
             '"JetBrains Mono", "Fira Code", Consolas, Monaco, "Courier New", monospace',
           fontSize: '0.85em',
         },
+        // 行内代码
         '& :not(pre) > code': {
           padding: '2px 6px',
           borderRadius: 1,
-          bgcolor: 'rgba(0,0,0,0.06)',
-          color: '#d6336c',
+          bgcolor: 'rgba(79,195,247,0.12)',
+          color: '#4FC3F7',
         },
+        // 代码块
         '& pre': {
           margin: '8px 0',
           padding: '12px 16px',
           borderRadius: 1.5,
           overflowX: 'auto',
-          bgcolor: '#282c34',
+          bgcolor: '#1e1e28',
           fontSize: '0.85rem',
           lineHeight: 1.5,
+          border: '1px solid #252530',
           '& code': {
             color: '#abb2bf',
             bgcolor: 'transparent',
@@ -93,30 +98,32 @@ export default function MarkdownRenderer({ content, isUser }) {
           fontSize: '0.9rem',
         },
         '& th, & td': {
-          border: '1px solid',
-          borderColor: 'divider',
+          border: '1px solid #252530',
           padding: '6px 12px',
           textAlign: 'left',
         },
         '& th': {
-          bgcolor: 'rgba(0,0,0,0.04)',
+          bgcolor: 'rgba(79,195,247,0.1)',
           fontWeight: 600,
+          color: '#ffffff',
         },
         '& a': {
-          color: 'primary.main',
+          color: '#4FC3F7',
           textDecoration: 'none',
-          '&:hover': { textDecoration: 'underline' },
+          '&:hover': { textDecoration: 'underline', color: '#29B6F6' },
         },
         '& hr': {
           border: 'none',
-          borderTop: '1px solid',
-          borderColor: 'divider',
+          borderTop: '1px solid #252530',
           margin: '12px 0',
         },
         '& img': {
           maxWidth: '100%',
           borderRadius: 1,
         },
+        // 强调/粗体/斜体颜色
+        '& strong': { color: '#ffffff', fontWeight: 600 },
+        '& em': { color: '#E8E8EE' },
       }}
     >
       <ReactMarkdown
