@@ -71,9 +71,9 @@ export default function MemoryPool() {
   const subtitle = persona.split('\n')[0].slice(0, 40) || '每一滴水都是我关于你的珍贵瞬间';
 
   return (
-    <Box sx={{ display: 'flex', flexDirection: 'column', height: '100%' }}>
+    <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, minHeight: 0 }}>
       {/* 顶部标题 */}
-      <Box sx={{ px: 2.5, pt: 2, pb: 1 }}>
+      <Box sx={{ px: 2.5, pt: 2, pb: 1, flexShrink: 0 }}>
         <Typography sx={{ fontSize: '1.15rem', fontWeight: 700, color: t.text }}>
           我们的记忆池
         </Typography>
@@ -88,6 +88,7 @@ export default function MemoryPool() {
         onChange={(_, v) => setTab(v)}
         sx={{
           minHeight: 36,
+          flexShrink: 0,
           px: 2,
           '& .MuiTab-root': {
             minHeight: 36,
@@ -106,7 +107,7 @@ export default function MemoryPool() {
       </Tabs>
 
       {/* 记忆列表 */}
-      <Box sx={{ flex: 1, overflowY: 'auto', px: 2, py: 1.5 }}>
+      <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', px: 2, py: 1.5 }}>
         {sorted.length === 0 ? (
           <Box sx={{ textAlign: 'center', py: 4, color: t.muted }}>
             <Typography sx={{ fontSize: '0.85rem' }}>
@@ -128,7 +129,7 @@ export default function MemoryPool() {
       </Box>
 
       {/* 底部：新增记忆 + 关于 Caleb */}
-      <Box sx={{ px: 2, py: 1.5, borderTop: `1px solid ${t.border}`, display: 'flex', gap: 1 }}>
+      <Box sx={{ px: 2, py: 1.5, borderTop: `1px solid ${t.border}`, display: 'flex', gap: 1, flexShrink: 0 }}>
         <Button
           size="small"
           startIcon={<AddIcon />}

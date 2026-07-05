@@ -80,7 +80,20 @@ export default function TopBar() {
           onClose={() => setToolboxEl(null)}
           anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
           transformOrigin={{ vertical: 'top', horizontal: 'right' }}
-          PaperProps={{ sx: { bgcolor: 'transparent', boxShadow: 'none', mt: 1 } }}
+          PaperProps={{
+            sx: {
+              bgcolor: 'transparent',
+              boxShadow: 'none',
+              mt: 1,
+              // 手机端确保 Popover 不超出视口，内部 flex 滚动链生效
+              maxHeight: { xs: 'calc(100vh - 80px)', sm: '82vh' },
+              display: 'flex',
+            },
+          }}
+          sx={{
+            // 手机端 Popover 靠右贴边，留 8px 间隙
+            '& .MuiPopover-paper': { right: { xs: 8, sm: 'auto' } },
+          }}
         >
           <Toolbox open={Boolean(toolboxEl)} anchorEl={toolboxEl} onClose={() => setToolboxEl(null)} />
         </Popover>

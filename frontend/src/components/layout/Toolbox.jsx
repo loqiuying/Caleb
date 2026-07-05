@@ -236,7 +236,7 @@ export default function Toolbox({ open, anchorEl, onClose }) {
         </Box>
       ) : activeTool === 'memory' ? (
         // 记忆池：完整功能
-        <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <MemoryPool />
         </Box>
       ) : (
