@@ -88,4 +88,29 @@ export const useSessionStore = create((set, get) => ({
     const { sessions, currentSessionId } = get();
     return sessions.find((s) => s.id === currentSessionId) || null;
   },
+
+  // 单会话模式：启动时加载会话，无则创建一个，并设为当前
+  initSingleSession: async () => {
+    set({ loading: true, error: null });
+    try {
+      const res = await sessionService.list(1, 20);
+      const list = Array.isArray(res) ? res : res.data || res.sessions || [];
+      const sorted = [...list].sort((a, b) => {
+        const ta = new Date(a.updated_at || a.updatedAt || 0).getTime();
+        const tb = new Date(b.updated_at || b.updatedAt || 0).getTime();
+        return tb - ta;
+      });
+      if (sorted.length > 0) {
+        // 已有会话：选第一个
+        set({ sessions: sorted, currentSessionId: sorted[0].id, loading: false });
+      } else {
+        // 无会话：创建一个
+        const session = await sessionService.create('与 Caleb 的对话');
+        set({ sessions: [session], currentSessionId: session.id, loading: false });
+      }
+    } catch (error) {
+      set({ loading: false, error: error.message });
+      console.error('初始化会话失败:', error);
+    }
+  },
 }));

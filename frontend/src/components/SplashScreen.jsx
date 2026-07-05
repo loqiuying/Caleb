@@ -55,22 +55,10 @@ export default function SplashScreen() {
         CALEB
       </Typography>
 
-      {/* 副标题 */}
-      <Typography
-        sx={{
-          color: t.muted,
-          fontSize: 13,
-          fontWeight: 400,
-          letterSpacing: 2,
-          mb: 4,
-        }}
-      >
-        智能对话助手
-      </Typography>
-
       {/* 加载进度条 */}
       <Box
         sx={{
+          mt: 2,
           width: 200,
           height: 3,
           borderRadius: 3,

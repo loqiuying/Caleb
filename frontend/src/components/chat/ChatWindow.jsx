@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Box, Typography } from '@mui/material';
+import { Box } from '@mui/material';
 import { useTheme } from '@mui/material';
 import { useSessionStore } from '../../store/sessionStore.js';
 import { useChatStore } from '../../store/chatStore.js';
@@ -7,12 +7,12 @@ import EmptyState from '../layout/EmptyState.jsx';
 import MessageList from './MessageList.jsx';
 import MessageInput from './MessageInput.jsx';
 
-// 聊天主区域：永远显示输入框（微信风），没会话时发消息自动创建
+// 聊天主区域：单一聊天框，会话由 AppLayout 初始化
 export default function ChatWindow() {
   const theme = useTheme();
   const t = theme.palette._;
   const currentSessionId = useSessionStore((s) => s.currentSessionId);
-  const createSession = useSessionStore((s) => s.createSession);
+  const loading = useSessionStore((s) => s.loading);
   const { messages, isStreaming, loadMessages, sendMessage, regenerateLast, resendFromMessage } = useChatStore();
 
   useEffect(() => {
@@ -26,7 +26,7 @@ export default function ChatWindow() {
     };
     const resendHandler = (e) => {
       if (currentSessionId && e.detail?.id) {
-        resendFromMessage(currentSessionId, e.detail.id);
+        resendFromMessage(currentSessionId, e.detail.id, e.detail.content);
       }
     };
     window.addEventListener('message:regenerate', regenHandler);
@@ -43,19 +43,8 @@ export default function ChatWindow() {
     messages[messages.length - 1].role === 'assistant' &&
     !messages[messages.length - 1].content;
 
-  // 发送消息：没会话时先创建
-  const handleSend = async (content) => {
-    let sid = currentSessionId;
-    if (!sid) {
-      try {
-        const s = await createSession('新对话');
-        sid = s.id;
-      } catch (error) {
-        console.error('创建会话失败:', error);
-        return;
-      }
-    }
-    sendMessage(sid, content);
+  const handleSend = (content) => {
+    if (currentSessionId) sendMessage(currentSessionId, content);
   };
 
   return (
@@ -71,9 +60,9 @@ export default function ChatWindow() {
       {currentSessionId ? (
         <MessageList messages={messages} showTyping={showTyping} />
       ) : (
-        <EmptyState />
+        <EmptyState loading={loading} />
       )}
-      <MessageInput onSend={handleSend} disabled={isStreaming} />
+      <MessageInput onSend={handleSend} disabled={isStreaming || !currentSessionId} />
     </Box>
   );
 }

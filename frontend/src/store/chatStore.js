@@ -188,7 +188,10 @@ export const useChatStore = create((set, get) => ({
 
   // 重发：从指定 user 消息重新请求
   // 移除该消息及其后所有消息，重新 sendMessage
-  resendFromMessage: async (sessionId, messageId) => {
+  // 重发：从指定 user 消息重新请求
+  // 传 newContent 则用编辑后的内容，否则用原内容
+  // 移除该消息及其后所有消息，重新 sendMessage
+  resendFromMessage: async (sessionId, messageId, newContent) => {
     const { messages, isStreaming } = get();
     if (isStreaming) return;
 
@@ -197,12 +200,14 @@ export const useChatStore = create((set, get) => ({
     const target = messages[idx];
     if (target.role !== 'user') return;
 
+    const content = (newContent ?? '').trim() || target.content;
+
     // 移除该消息及之后所有消息
     const kept = messages.slice(0, idx);
     set({ messages: kept, streamingContent: '', error: null });
 
     // 重新发送（sendMessage 会追加 user + assistant 占位并启动流）
-    get().sendMessage(sessionId, target.content);
+    get().sendMessage(sessionId, content);
   },
 
   // 中止当前流

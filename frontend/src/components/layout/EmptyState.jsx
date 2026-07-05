@@ -1,13 +1,10 @@
-import { Box, Typography } from '@mui/material';
+import { Box, Typography, CircularProgress } from '@mui/material';
 import { useTheme } from '@mui/material';
-import { useSessionStore } from '../../store/sessionStore.js';
 
-// 空状态：极简聊天准备态（微信风，无欢迎页元素）
-// 没选中会话时显示，底部仍有输入框可直接发消息（由 ChatWindow 提供）
-export default function EmptyState() {
+// 空状态：会话初始化中的占位
+export default function EmptyState({ loading }) {
   const theme = useTheme();
   const t = theme.palette._;
-  const sessions = useSessionStore((s) => s.sessions);
 
   return (
     <Box
@@ -19,19 +16,21 @@ export default function EmptyState() {
         justifyContent: 'center',
         bgcolor: t.bg,
         color: t.text,
+        gap: 2,
       }}
     >
-      <Typography
-        sx={{
-          fontSize: '0.85rem',
-          color: t.muted,
-          opacity: 0.7,
-        }}
-      >
-        {sessions.length === 0
-          ? '开始和 Caleb 对话吧'
-          : '选择左侧会话，或直接发消息开始新对话'}
-      </Typography>
+      {loading ? (
+        <>
+          <CircularProgress size={28} sx={{ color: t.accent }} />
+          <Typography sx={{ fontSize: '0.85rem', color: t.muted }}>
+            正在连接 Caleb...
+          </Typography>
+        </>
+      ) : (
+        <Typography sx={{ fontSize: '0.85rem', color: t.muted, opacity: 0.7 }}>
+          开始和 Caleb 对话吧
+        </Typography>
+      )}
     </Box>
   );
 }
