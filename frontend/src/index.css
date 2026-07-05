@@ -76,6 +76,30 @@ body {
   }
 }
 
+/* 脉冲呼吸动画（伙伴状态指示器） */
+@keyframes pulse-ring {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.7;
+  }
+  70% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+@keyframes pulse-dot {
+  0%, 100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.15);
+  }
+}
+
 /* Splash 进度条 */
 @keyframes splash-loading {
   0% { width: 0%; }

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import {
   Box,
   Typography,
@@ -31,11 +31,11 @@ import { ACCENTS } from '../../theme/theme.js';
 import MemoryPool from '../memory/MemoryPool.jsx';
 import SortableToolList from './SortableToolList.jsx';
 import { useToolOrderStore } from '../../store/toolOrderStore.js';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 // 工具箱浮层：齿轮按钮触发，8 大入口（美化置顶）
-export default function Toolbox({ open, anchorEl, onClose }) {
+// initialTool: 外部传入初始打开的工具 id（如脉冲按钮传 'companion'）
+export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const theme = useTheme();
   const t = theme.palette._;
   const { mode, toggle } = useColorMode();
@@ -43,6 +43,12 @@ export default function Toolbox({ open, anchorEl, onClose }) {
   const { accent, setAccent, accents } = useAccent();
   const [activeTool, setActiveTool] = useState(null);
   const { order, setOrder, resetOrder } = useToolOrderStore();
+
+  // open 变 true 时，如果有 initialTool 直接进入对应面板
+  useEffect(() => {
+    if (open && initialTool) setActiveTool(initialTool);
+    if (!open) setActiveTool(null); // 关闭时重置
+  }, [open, initialTool]);
 
   // 8 大功能入口（默认顺序）
   const defaultTools = [
@@ -114,16 +120,6 @@ export default function Toolbox({ open, anchorEl, onClose }) {
           </IconButton>
         </Box>
       </Box>
-
-      {/* 列表模式下的拖拽提示 */}
-      {!activeTool && (
-        <Box sx={{ px: 2, py: 1, display: 'flex', alignItems: 'center', gap: 0.75 }}>
-          <DragHandleIcon sx={{ fontSize: 14, color: t.muted, opacity: 0.7 }} />
-          <Typography sx={{ fontSize: '0.7rem', color: t.muted, opacity: 0.7 }}>
-            长按手柄拖动可调整顺序
-          </Typography>
-        </Box>
-      )}
 
       {/* 内容区 */}
       {!activeTool ? (

@@ -15,7 +15,7 @@ import {
 import { CSS } from '@dnd-kit/utilities';
 import { Box, ListItemButton, ListItemIcon, ListItemText, Typography, IconButton } from '@mui/material';
 import { useTheme } from '@mui/material';
-import DragHandleIcon from '@mui/icons-material/DragHandle';
+import DragHandleIcon from '@mui/icons-material/Menu'; // 三横线图标
 
 /**
  * 可排序的工具入口列表
@@ -88,22 +88,6 @@ function SortableToolItem({ tool, onSelect }) {
         '&:hover': { bgcolor: t.subtle },
       }}
     >
-      {/* 拖拽手柄：只有按住这里才能拖（避免误触影响点击） */}
-      <Box
-        {...attributes}
-        {...listeners}
-        sx={{
-          cursor: 'grab',
-          px: 1,
-          py: 1.5,
-          color: t.muted,
-          '&:active': { cursor: 'grabbing', color: t.accent },
-          touchAction: 'none', // 关键：让触摸拖拽不被浏览器滚动拦截
-        }}
-      >
-        <DragHandleIcon sx={{ fontSize: 20 }} />
-      </Box>
-
       {/* 点击主体 */}
       <ListItemButton
         onClick={() => onSelect(tool.id)}
@@ -123,6 +107,22 @@ function SortableToolItem({ tool, onSelect }) {
           }
         />
       </ListItemButton>
+
+      {/* 拖拽手柄：右侧，只有按住这里才能拖（避免误触影响点击） */}
+      <Box
+        {...attributes}
+        {...listeners}
+        sx={{
+          cursor: 'grab',
+          px: 1.25,
+          py: 1.5,
+          color: t.muted,
+          '&:active': { cursor: 'grabbing', color: t.accent },
+          touchAction: 'none', // 关键：让触摸拖拽不被浏览器滚动拦截
+        }}
+      >
+        <DragHandleIcon sx={{ fontSize: 20 }} />
+      </Box>
     </Box>
   );
 }
