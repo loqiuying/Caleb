@@ -31,9 +31,11 @@ import { ACCENTS } from '../../theme/theme.js';
 import MemoryPool from '../memory/MemoryPool.jsx';
 import CompanionStatus from '../companion/CompanionStatus.jsx';
 import AddressEditor from '../companion/AddressEditor.jsx';
+import WeatherPanel from '../weather/WeatherPanel.jsx';
 import SortableToolList from './SortableToolList.jsx';
 import { useToolOrderStore } from '../../store/toolOrderStore.js';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // 工具箱浮层：齿轮按钮触发，8 大入口（美化置顶）
 // initialTool: 外部传入初始打开的工具 id（如脉冲按钮传 'companion'）
@@ -79,7 +81,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const panelTitle = activeToolObj ? activeToolObj.name : (titleMap[activeTool] || '工具箱');
 
   // 面板内容区是否需要更宽
-  const widePanel = ['memory', 'companion', 'address'].includes(activeTool);
+  const widePanel = ['memory', 'companion', 'address', 'weather'].includes(activeTool);
 
   return (
     <Box
@@ -108,6 +110,17 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
           {panelTitle}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          {/* 面板模式下显示返回箭头（直接关闭 Drawer 回聊天） */}
+          {activeTool && (
+            <IconButton
+              size="small"
+              onClick={onClose}
+              title="返回聊天"
+              sx={{ color: t.muted, '&:hover': { color: t.accent, bgcolor: t.subtle } }}
+            >
+              <ArrowBackIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          )}
           {/* 列表模式下显示"重置顺序"按钮 */}
           {!activeTool && order && (
             <IconButton
@@ -254,11 +267,15 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
         </Box>
       ) : activeTool === 'companion' ? (
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
-          <CompanionStatus />
+          <CompanionStatus onClose={onClose} />
         </Box>
       ) : activeTool === 'address' ? (
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <AddressEditor />
+        </Box>
+      ) : activeTool === 'weather' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <WeatherPanel />
         </Box>
       ) : (
         // 其他入口：占位
