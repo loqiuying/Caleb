@@ -6,6 +6,7 @@ import { useChatStore } from '../../store/chatStore.js';
 import EmptyState from '../layout/EmptyState.jsx';
 import MessageList from './MessageList.jsx';
 import MessageInput from './MessageInput.jsx';
+import { useSummaryStore } from '../../store/summaryStore.js';
 
 // 聊天主区域：单一聊天框，会话由 AppLayout 初始化
 export default function ChatWindow() {
@@ -14,10 +15,16 @@ export default function ChatWindow() {
   const currentSessionId = useSessionStore((s) => s.currentSessionId);
   const loading = useSessionStore((s) => s.loading);
   const { messages, isStreaming, loadMessages, sendMessage, regenerateLast, resendFromMessage } = useChatStore();
+  const checkAndSummarize = useSummaryStore((s) => s.checkAndSummarize);
 
   useEffect(() => {
     if (currentSessionId) loadMessages(currentSessionId);
   }, [currentSessionId, loadMessages]);
+
+  // 消息变化时检查是否需要自动总结
+  useEffect(() => {
+    if (messages.length >= 50) checkAndSummarize();
+  }, [messages, checkAndSummarize]);
 
   // 监听"重新生成" + "重发" 事件
   useEffect(() => {

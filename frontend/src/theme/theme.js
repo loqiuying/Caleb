@@ -12,28 +12,44 @@ import { createTheme } from '@mui/material/styles';
 // id 用于持久化，name 用于显示
 export const ACCENTS = {
   green: {
-    id: 'green',
-    name: '微信绿',
+    id: 'green', name: '微信绿',
     light: { accent: '#07C160', accentHover: '#06AD56', accentSoft: '#E6F7EC', bubbleUser: '#95EC69', bubbleUserText: '#1A1A1A' },
     dark:  { accent: '#07C160', accentHover: '#06AD56', accentSoft: 'rgba(7,193,96,0.16)', bubbleUser: '#2E5A3E', bubbleUserText: '#E6E6E6' },
   },
   indigo: {
-    id: 'indigo',
-    name: '靛蓝',
+    id: 'indigo', name: '靛蓝',
     light: { accent: '#6366f1', accentHover: '#4f46e5', accentSoft: '#eef2ff', bubbleUser: '#e0e7ff', bubbleUserText: '#3730a3' },
     dark:  { accent: '#818cf8', accentHover: '#6366f1', accentSoft: 'rgba(129,140,248,0.16)', bubbleUser: '#3730a3', bubbleUserText: '#c7d2fe' },
   },
   rose: {
-    id: 'rose',
-    name: '玫瑰粉',
+    id: 'rose', name: '玫瑰粉',
     light: { accent: '#f43f5e', accentHover: '#e11d48', accentSoft: '#ffe4e6', bubbleUser: '#ffe4e6', bubbleUserText: '#9f1239' },
     dark:  { accent: '#fb7185', accentHover: '#f43f5e', accentSoft: 'rgba(251,113,133,0.16)', bubbleUser: '#4c0519', bubbleUserText: '#fecdd3' },
   },
   sky: {
-    id: 'sky',
-    name: '天蓝',
+    id: 'sky', name: '天蓝',
     light: { accent: '#0ea5e9', accentHover: '#0284c7', accentSoft: '#e0f2fe', bubbleUser: '#bae6fd', bubbleUserText: '#075985' },
     dark:  { accent: '#38bdf8', accentHover: '#0ea5e9', accentSoft: 'rgba(56,189,248,0.16)', bubbleUser: '#0c4a6e', bubbleUserText: '#bae6fd' },
+  },
+  amber: {
+    id: 'amber', name: '琥珀橙',
+    light: { accent: '#f59e0b', accentHover: '#d97706', accentSoft: '#fef3c7', bubbleUser: '#fde68a', bubbleUserText: '#78350f' },
+    dark:  { accent: '#fbbf24', accentHover: '#f59e0b', accentSoft: 'rgba(251,191,36,0.16)', bubbleUser: '#78350f', bubbleUserText: '#fde68a' },
+  },
+  purple: {
+    id: 'purple', name: '葡萄紫',
+    light: { accent: '#a855f7', accentHover: '#9333ea', accentSoft: '#f3e8ff', bubbleUser: '#e9d5ff', bubbleUserText: '#6b21a8' },
+    dark:  { accent: '#c084fc', accentHover: '#a855f7', accentSoft: 'rgba(192,132,252,0.16)', bubbleUser: '#581c87', bubbleUserText: '#e9d5ff' },
+  },
+  teal: {
+    id: 'teal', name: '青松绿',
+    light: { accent: '#14b8a6', accentHover: '#0d9488', accentSoft: '#ccfbf1', bubbleUser: '#99f6e4', bubbleUserText: '#115e59' },
+    dark:  { accent: '#2dd4bf', accentHover: '#14b8a6', accentSoft: 'rgba(45,212,191,0.16)', bubbleUser: '#134e4a', bubbleUserText: '#99f6e4' },
+  },
+  coral: {
+    id: 'coral', name: '珊瑚红',
+    light: { accent: '#ff6b6b', accentHover: '#ee5a52', accentSoft: '#fee2e2', bubbleUser: '#fecaca', bubbleUserText: '#991b1b' },
+    dark:  { accent: '#f87171', accentHover: '#ef4444', accentSoft: 'rgba(248,113,113,0.16)', bubbleUser: '#7f1d1d', bubbleUserText: '#fecaca' },
   },
 };
 

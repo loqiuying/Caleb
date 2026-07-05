@@ -32,6 +32,10 @@ import MemoryPool from '../memory/MemoryPool.jsx';
 import CompanionStatus from '../companion/CompanionStatus.jsx';
 import AddressEditor from '../companion/AddressEditor.jsx';
 import WeatherPanel from '../weather/WeatherPanel.jsx';
+import Album from '../album/Album.jsx';
+import Diary from '../diary/Diary.jsx';
+import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
+import EditNoteIcon from '@mui/icons-material/EditNote';
 import SortableToolList from './SortableToolList.jsx';
 import { useToolOrderStore } from '../../store/toolOrderStore.js';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -58,12 +62,14 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const defaultTools = [
     { id: 'beautify', name: '美化', icon: <PaletteIcon />, desc: '主题、字体与配色' },
     { id: 'address', name: '地址', icon: <PlaceIcon />, desc: '设置你和 Caleb 的位置' },
-    { id: 'games', name: '小游戏', icon: <SportsEsportsIcon />, desc: '一起来玩个小游戏' },
-    { id: 'interact', name: '一起互动', icon: <GroupIcon />, desc: '实时互动玩法' },
     { id: 'weather', name: '天气', icon: <WbSunnyIcon />, desc: '查看今日天气' },
+    { id: 'diary', name: '日记', icon: <EditNoteIcon />, desc: '我们的日记' },
+    { id: 'album', name: '相册', icon: <PhotoLibraryIcon />, desc: '收藏每一张照片' },
+    { id: 'memory', name: '记忆池', icon: <PsychologyIcon />, desc: '共同记忆收藏' },
+    { id: 'games', name: '小游戏', icon: <SportsEsportsIcon />, desc: '一起来玩个小游戏' },
     { id: 'study', name: '一起学习', icon: <SchoolIcon />, desc: '学习计划与打卡' },
     { id: 'calendar', name: '日历记录本', icon: <CalendarMonthIcon />, desc: '记下每一天' },
-    { id: 'memory', name: '记忆池', icon: <PsychologyIcon />, desc: '共同记忆收藏' },
+    { id: 'interact', name: '一起互动', icon: <GroupIcon />, desc: '实时互动玩法' },
   ];
 
   // 按用户存储的顺序重排，缺失的入口补到末尾（兼容新增入口）
@@ -81,7 +87,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const panelTitle = activeToolObj ? activeToolObj.name : (titleMap[activeTool] || '工具箱');
 
   // 面板内容区是否需要更宽
-  const widePanel = ['memory', 'companion', 'address', 'weather'].includes(activeTool);
+  const widePanel = ['memory', 'companion', 'address', 'weather', 'album', 'diary'].includes(activeTool);
 
   return (
     <Box
@@ -276,6 +282,14 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
       ) : activeTool === 'weather' ? (
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <WeatherPanel />
+        </Box>
+      ) : activeTool === 'album' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <Album />
+        </Box>
+      ) : activeTool === 'diary' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <Diary />
         </Box>
       ) : (
         // 其他入口：占位

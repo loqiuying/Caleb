@@ -48,11 +48,11 @@ export default function TopBar() {
               <Box sx={{ position: 'relative', width: 14, height: 14 }}>
                 <Box sx={{
                   position: 'absolute', inset: 0, borderRadius: '50%',
-                  bgcolor: '#22c55e', animation: 'pulse-ring 2s ease-out infinite',
+                  bgcolor: t.accent, animation: 'pulse-ring 2s ease-out infinite',
                 }} />
                 <Box sx={{
                   position: 'absolute', inset: 2, borderRadius: '50%',
-                  bgcolor: '#22c55e', boxShadow: '0 0 6px rgba(34,197,94,0.8)',
+                  bgcolor: t.accent, boxShadow: `0 0 6px ${t.accent}`,
                   animation: 'pulse-dot 2s ease-in-out infinite',
                 }} />
               </Box>
