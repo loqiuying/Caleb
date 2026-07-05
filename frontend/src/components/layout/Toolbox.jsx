@@ -16,19 +16,21 @@ import { useTheme } from '@mui/material';
 import SettingsIcon from '@mui/icons-material/Settings';
 import CloseIcon from '@mui/icons-material/Close';
 import PaletteIcon from '@mui/icons-material/Palette';
-import FavoriteIcon from '@mui/icons-material/Favorite';
 import SportsEsportsIcon from '@mui/icons-material/SportsEsports';
 import GroupIcon from '@mui/icons-material/Group';
 import WbSunnyIcon from '@mui/icons-material/WbSunny';
 import SchoolIcon from '@mui/icons-material/School';
 import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 import PsychologyIcon from '@mui/icons-material/Psychology';
+import PlaceIcon from '@mui/icons-material/Place';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 import CheckIcon from '@mui/icons-material/Check';
 import { useColorMode, useFont, useAccent } from '../../App.jsx';
 import { ACCENTS } from '../../theme/theme.js';
 import MemoryPool from '../memory/MemoryPool.jsx';
+import CompanionStatus from '../companion/CompanionStatus.jsx';
+import AddressEditor from '../companion/AddressEditor.jsx';
 import SortableToolList from './SortableToolList.jsx';
 import { useToolOrderStore } from '../../store/toolOrderStore.js';
 import RestartAltIcon from '@mui/icons-material/RestartAlt';
@@ -50,10 +52,10 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
     if (!open) setActiveTool(null); // 关闭时重置
   }, [open, initialTool]);
 
-  // 8 大功能入口（默认顺序）
+  // 功能入口（默认顺序，companion 由脉冲按钮进入不在此列）
   const defaultTools = [
     { id: 'beautify', name: '美化', icon: <PaletteIcon />, desc: '主题、字体与配色' },
-    { id: 'companion', name: '伙伴状态', icon: <FavoriteIcon />, desc: '查看伙伴在线状态' },
+    { id: 'address', name: '地址', icon: <PlaceIcon />, desc: '设置你和 Caleb 的位置' },
     { id: 'games', name: '小游戏', icon: <SportsEsportsIcon />, desc: '一起来玩个小游戏' },
     { id: 'interact', name: '一起互动', icon: <GroupIcon />, desc: '实时互动玩法' },
     { id: 'weather', name: '天气', icon: <WbSunnyIcon />, desc: '查看今日天气' },
@@ -69,18 +71,28 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
 
   const activeToolObj = tools.find((x) => x.id === activeTool);
 
+  // 标题映射：companion 不在 tools 里，单独处理
+  const titleMap = { companion: 'Caleb的状态', address: '地址' };
+  const panelTitle = activeToolObj ? activeToolObj.name : (titleMap[activeTool] || '工具箱');
+
+  // 面板内容区是否需要更宽
+  const widePanel = ['memory', 'companion', 'address'].includes(activeTool);
+
   return (
     <Box
       sx={{
-        width: activeTool === 'memory' ? { xs: '95vw', sm: 460 } : { xs: '92vw', sm: 340 },
-        maxWidth: activeTool === 'memory' ? 480 : 360,
-        maxHeight: { xs: '75vh', sm: '82vh' },
+        width: widePanel
+          ? { xs: '100vw', sm: 480 }
+          : { xs: '100vw', sm: 340 },
+        maxWidth: widePanel ? { xs: '100vw', sm: 520 } : 380,
+        height: { xs: '100vh', sm: 'auto' },
+        maxHeight: { xs: '100vh', sm: '82vh' },
         display: 'flex',
         flexDirection: 'column',
         bgcolor: t.surface,
-        borderRadius: 3,
+        borderRadius: { xs: 0, sm: 3 },
         overflow: 'hidden',
-        border: `1px solid ${t.border}`,
+        border: { xs: 'none', sm: `1px solid ${t.border}` },
         boxShadow: 6,
       }}
       onClick={(e) => e.stopPropagation()}
@@ -97,7 +109,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
         }}
       >
         <Typography sx={{ fontWeight: 600, fontSize: '0.95rem', color: t.text }}>
-          {activeToolObj ? activeToolObj.name : '工具箱'}
+          {panelTitle}
         </Typography>
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
           {/* 列表模式下显示"重置顺序"按钮 */}
@@ -241,9 +253,16 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
           </Typography>
         </Box>
       ) : activeTool === 'memory' ? (
-        // 记忆池：完整功能
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <MemoryPool />
+        </Box>
+      ) : activeTool === 'companion' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <CompanionStatus />
+        </Box>
+      ) : activeTool === 'address' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <AddressEditor />
         </Box>
       ) : (
         // 其他入口：占位

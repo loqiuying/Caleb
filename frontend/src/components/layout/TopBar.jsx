@@ -109,13 +109,14 @@ export default function TopBar() {
             sx: {
               bgcolor: 'transparent',
               boxShadow: 'none',
-              mt: 1,
-              maxHeight: { xs: 'calc(100vh - 80px)', sm: '82vh' },
+              mt: { xs: 0, sm: 1 },
+              width: { xs: '100vw', sm: 'auto' },
+              maxHeight: { xs: '100vh', sm: '82vh' },
               display: 'flex',
             },
           }}
           sx={{
-            '& .MuiPopover-paper': { right: { xs: 8, sm: 'auto' } },
+            '& .MuiPopover-paper': { right: { xs: 0, sm: 'auto' } },
           }}
         >
           <Toolbox
