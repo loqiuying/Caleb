@@ -20,7 +20,7 @@ export default function MessageItem({ message, showTime }) {
     <Box
       sx={{
         position: 'relative',
-        maxWidth: { xs: '78%', md: '68%' },
+        maxWidth: { xs: '100%', md: '68%' },
         borderRadius: 2,
         px: 2,
         py: 1.25,
@@ -72,12 +72,12 @@ export default function MessageItem({ message, showTime }) {
     </Box>
   );
 
-  // 头像
+  // 头像（手机略小）
   const avatar = (
     <Box
       sx={{
-        width: 38,
-        height: 38,
+        width: { xs: 32, sm: 38 },
+        height: { xs: 32, sm: 38 },
         borderRadius: 1.5,
         flexShrink: 0,
         background: isUser
@@ -87,7 +87,7 @@ export default function MessageItem({ message, showTime }) {
         alignItems: 'center',
         justifyContent: 'center',
         color: '#ffffff',
-        fontSize: '0.78rem',
+        fontSize: { xs: '0.7rem', sm: '0.78rem' },
         fontWeight: 700,
       }}
     >
@@ -118,7 +118,7 @@ export default function MessageItem({ message, showTime }) {
           display: 'flex',
           flexDirection: isUser ? 'row-reverse' : 'row',
           alignItems: 'flex-start',
-          gap: 1.25,
+          gap: { xs: 1, sm: 1.25 },
         }}
       >
         {avatar}
@@ -126,7 +126,7 @@ export default function MessageItem({ message, showTime }) {
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            maxWidth: { xs: '82%', md: '72%' },
+            maxWidth: { xs: '78%', sm: '82%', md: '72%' },
             alignItems: isUser ? 'flex-end' : 'flex-start',
           }}
         >

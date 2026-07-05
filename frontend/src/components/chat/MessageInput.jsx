@@ -106,8 +106,8 @@ export default function MessageInput({ onSend, disabled }) {
           sx={{
             bgcolor: t.accent,
             color: '#ffffff',
-            width: 44,
-            height: 44,
+            width: { xs: 40, sm: 44 },
+            height: { xs: 40, sm: 44 },
             borderRadius: '50%',
             transition: 'all 0.2s',
             boxShadow: canSend ? `0 4px 16px ${t.accentSoft}` : 'none',

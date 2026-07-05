@@ -28,6 +28,7 @@ import LightModeIcon from '@mui/icons-material/LightMode';
 import CheckIcon from '@mui/icons-material/Check';
 import { useColorMode, useFont, useAccent } from '../../App.jsx';
 import { ACCENTS } from '../../theme/theme.js';
+import MemoryPool from '../memory/MemoryPool.jsx';
 
 // 工具箱浮层：齿轮按钮触发，8 大入口（美化置顶）
 export default function Toolbox({ open, anchorEl, onClose }) {
@@ -55,8 +56,9 @@ export default function Toolbox({ open, anchorEl, onClose }) {
   return (
     <Box
       sx={{
-        width: 320,
-        maxHeight: '80vh',
+        width: activeTool === 'memory' ? { xs: '95vw', sm: 460 } : { xs: '92vw', sm: 340 },
+        maxWidth: activeTool === 'memory' ? 480 : 360,
+        maxHeight: { xs: '75vh', sm: '82vh' },
         display: 'flex',
         flexDirection: 'column',
         bgcolor: t.surface,
@@ -231,6 +233,11 @@ export default function Toolbox({ open, anchorEl, onClose }) {
             永和九年，岁在癸丑，暮春之初。<br />
             The quick brown fox jumps.
           </Typography>
+        </Box>
+      ) : activeTool === 'memory' ? (
+        // 记忆池：完整功能
+        <Box sx={{ flex: 1, overflow: 'hidden', display: 'flex', flexDirection: 'column' }}>
+          <MemoryPool />
         </Box>
       ) : (
         // 其他入口：占位

@@ -28,8 +28,8 @@ export default function MessageList({ messages, showTyping }) {
       sx={{
         flexGrow: 1,
         overflowY: 'auto',
-        px: { xs: 1.5, md: 3 },
-        py: 2.5,
+        px: { xs: 1, sm: 1.5, md: 3 },
+        py: { xs: 1.5, md: 2.5 },
         scrollBehavior: 'smooth',
         bgcolor: t.bg,
       }}
@@ -40,16 +40,25 @@ export default function MessageList({ messages, showTyping }) {
           margin: '0 auto',
           display: 'flex',
           flexDirection: 'column',
-          gap: 2.5,
+          gap: { xs: 2, md: 2.5 },
         }}
       >
-        {messages.map((message, idx) => (
-          <MessageItem
-            key={message.id}
-            message={message}
-            showTime={shouldShowTime(message, idx)}
-          />
-        ))}
+        {messages.map((message, idx) => {
+          // showTyping 时跳过末尾的空 assistant 占位（避免与 TypingIndicator 重复）
+          const isTypingPlaceholder =
+            showTyping &&
+            idx === messages.length - 1 &&
+            message.role === 'assistant' &&
+            !message.content;
+          if (isTypingPlaceholder) return null;
+          return (
+            <MessageItem
+              key={message.id}
+              message={message}
+              showTime={shouldShowTime(message, idx)}
+            />
+          );
+        })}
         {showTyping && <TypingIndicator />}
         <div ref={bottomRef} />
       </Box>
