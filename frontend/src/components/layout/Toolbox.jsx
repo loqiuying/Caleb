@@ -34,6 +34,7 @@ import AddressEditor from '../companion/AddressEditor.jsx';
 import WeatherPanel from '../weather/WeatherPanel.jsx';
 import Album from '../album/Album.jsx';
 import Diary from '../diary/Diary.jsx';
+import Calendar from '../calendar/Calendar.jsx';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import SortableToolList from './SortableToolList.jsx';
@@ -68,7 +69,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
     { id: 'memory', name: '记忆池', icon: <PsychologyIcon />, desc: '共同记忆收藏' },
     { id: 'games', name: '小游戏', icon: <SportsEsportsIcon />, desc: '一起来玩个小游戏' },
     { id: 'study', name: '一起学习', icon: <SchoolIcon />, desc: '学习计划与打卡' },
-    { id: 'calendar', name: '日历记录本', icon: <CalendarMonthIcon />, desc: '记下每一天' },
+    { id: 'calendar', name: '日历', icon: <CalendarMonthIcon />, desc: '记下每一天' },
     { id: 'interact', name: '一起互动', icon: <GroupIcon />, desc: '实时互动玩法' },
   ];
 
@@ -87,7 +88,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const panelTitle = activeToolObj ? activeToolObj.name : (titleMap[activeTool] || '工具箱');
 
   // 面板内容区是否需要更宽
-  const widePanel = ['memory', 'companion', 'address', 'weather', 'album', 'diary'].includes(activeTool);
+  const widePanel = ['memory', 'companion', 'address', 'weather', 'album', 'diary', 'calendar'].includes(activeTool);
 
   return (
     <Box
@@ -255,7 +256,11 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
                   fontFamily:
                     f.id === 'system' ? 'var(--font-app)' :
                     f.id === 'noto-sans' ? '"Noto Sans SC", sans-serif' :
-                    '"Noto Serif SC", serif',
+                    f.id === 'noto-serif' ? '"Noto Serif SC", serif' :
+                    f.id === 'lxgw' ? '"LXGW WenKai TC", sans-serif' :
+                    f.id === 'zcool' ? '"ZCOOL KuaiLe", sans-serif' :
+                    f.id === 'mono' ? '"JetBrains Mono", monospace' :
+                    'var(--font-app)',
                 }}
               >
                 {f.name}
@@ -290,6 +295,10 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
       ) : activeTool === 'diary' ? (
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <Diary />
+        </Box>
+      ) : activeTool === 'calendar' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <Calendar />
         </Box>
       ) : (
         // 其他入口：占位

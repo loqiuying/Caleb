@@ -3,6 +3,7 @@ import { Box, TextField, IconButton, Paper } from '@mui/material';
 import { useTheme } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import StopIcon from '@mui/icons-material/Stop';
+import SentimentSatisfiedAltIcon from '@mui/icons-material/SentimentSatisfiedAlt';
 
 // 底部输入区：颜色走 token，聚焦时浮起
 // Enter 发送，Shift+Enter 换行
@@ -97,6 +98,25 @@ export default function MessageInput({ onSend, disabled }) {
             }}
           />
         </Paper>
+
+        {/* 表情按钮：预留入口，无背景色 */}
+        <IconButton
+          onClick={() => console.log('emoji button clicked')}
+          aria-label="表情"
+          sx={{
+            color: t.muted,
+            width: { xs: 40, sm: 44 },
+            height: { xs: 40, sm: 44 },
+            borderRadius: '50%',
+            transition: 'all 0.2s',
+            '&:hover': {
+              color: t.accent,
+              bgcolor: t.accentSoft,
+            },
+          }}
+        >
+          <SentimentSatisfiedAltIcon />
+        </IconButton>
 
         {/* 发送按钮：强调色圆形 */}
         <IconButton

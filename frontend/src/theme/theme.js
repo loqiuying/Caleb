@@ -5,7 +5,7 @@ import { createTheme } from '@mui/material/styles';
  *
  * 浅色：聊天背景米色 #EDEDED，气泡白/绿
  * 深色：现代深色，气泡深灰/深绿
- * 强调色：4 个预设，用户可在"美化"入口切换
+ * 强调色：16 个预设，用户可在"美化"入口切换
  */
 
 // 强调色预设：每个含 main/hover/soft(深浅各一) + 气泡色
@@ -50,6 +50,46 @@ export const ACCENTS = {
     id: 'coral', name: '珊瑚红',
     light: { accent: '#ff6b6b', accentHover: '#ee5a52', accentSoft: '#fee2e2', bubbleUser: '#fecaca', bubbleUserText: '#991b1b' },
     dark:  { accent: '#f87171', accentHover: '#ef4444', accentSoft: 'rgba(248,113,113,0.16)', bubbleUser: '#7f1d1d', bubbleUserText: '#fecaca' },
+  },
+  cyan: {
+    id: 'cyan', name: '青碧',
+    light: { accent: '#06b6d4', accentHover: '#0891b2', accentSoft: '#cffafe', bubbleUser: '#a5f3fc', bubbleUserText: '#155e75' },
+    dark:  { accent: '#22d3ee', accentHover: '#06b6d4', accentSoft: 'rgba(34,211,238,0.16)', bubbleUser: '#0e7490', bubbleUserText: '#a5f3fc' },
+  },
+  violet: {
+    id: 'violet', name: '蓝紫',
+    light: { accent: '#8b5cf6', accentHover: '#7c3aed', accentSoft: '#ede9fe', bubbleUser: '#ddd6fe', bubbleUserText: '#5b21b6' },
+    dark:  { accent: '#a78bfa', accentHover: '#8b5cf6', accentSoft: 'rgba(167,139,250,0.16)', bubbleUser: '#4c1d95', bubbleUserText: '#ddd6fe' },
+  },
+  emerald: {
+    id: 'emerald', name: '翡翠',
+    light: { accent: '#10b981', accentHover: '#059669', accentSoft: '#d1fae5', bubbleUser: '#a7f3d0', bubbleUserText: '#065f46' },
+    dark:  { accent: '#34d399', accentHover: '#10b981', accentSoft: 'rgba(52,211,153,0.16)', bubbleUser: '#064e3b', bubbleUserText: '#a7f3d0' },
+  },
+  pink: {
+    id: 'pink', name: '樱花粉',
+    light: { accent: '#ec4899', accentHover: '#db2777', accentSoft: '#fce7f3', bubbleUser: '#fbcfe8', bubbleUserText: '#9d174d' },
+    dark:  { accent: '#f472b6', accentHover: '#ec4899', accentSoft: 'rgba(244,114,182,0.16)', bubbleUser: '#831843', bubbleUserText: '#fbcfe8' },
+  },
+  orange: {
+    id: 'orange', name: '活力橙',
+    light: { accent: '#f97316', accentHover: '#ea580c', accentSoft: '#ffedd5', bubbleUser: '#fed7aa', bubbleUserText: '#9a3412' },
+    dark:  { accent: '#fb923c', accentHover: '#f97316', accentSoft: 'rgba(251,146,60,0.16)', bubbleUser: '#7c2d12', bubbleUserText: '#fed7aa' },
+  },
+  lime: {
+    id: 'lime', name: '青柠',
+    light: { accent: '#84cc16', accentHover: '#65a30d', accentSoft: '#ecfccb', bubbleUser: '#d9f99d', bubbleUserText: '#3f6212' },
+    dark:  { accent: '#a3e635', accentHover: '#84cc16', accentSoft: 'rgba(163,230,53,0.16)', bubbleUser: '#365314', bubbleUserText: '#d9f99d' },
+  },
+  slate: {
+    id: 'slate', name: '岩灰蓝',
+    light: { accent: '#64748b', accentHover: '#475569', accentSoft: '#e2e8f0', bubbleUser: '#cbd5e1', bubbleUserText: '#334155' },
+    dark:  { accent: '#94a3b8', accentHover: '#64748b', accentSoft: 'rgba(148,163,184,0.16)', bubbleUser: '#1e293b', bubbleUserText: '#cbd5e1' },
+  },
+  fuchsia: {
+    id: 'fuchsia', name: '品红',
+    light: { accent: '#d946ef', accentHover: '#c026d3', accentSoft: '#fae8ff', bubbleUser: '#f5d0fe', bubbleUserText: '#86198f' },
+    dark:  { accent: '#e879f9', accentHover: '#d946ef', accentSoft: 'rgba(232,121,249,0.16)', bubbleUser: '#701a75', bubbleUserText: '#f5d0fe' },
   },
 };
 

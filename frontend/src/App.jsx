@@ -13,6 +13,9 @@ export const FONTS = [
   { id: 'system', name: '系统默认', sample: '永 和 谐' },
   { id: 'noto-sans', name: '思源黑体', sample: '永 和 谐' },
   { id: 'noto-serif', name: '思源宋体', sample: '永 和 谐' },
+  { id: 'lxgw', name: '霞鹜文楷', sample: '永 和 谐' },
+  { id: 'zcool', name: '站酷快乐体', sample: '永 和 谐' },
+  { id: 'mono', name: '等宽', sample: '永 和 谐' },
 ];
 export const FontContext = createContext({ font: 'system', setFont: () => {} });
 export function useFont() { return useContext(FontContext); }

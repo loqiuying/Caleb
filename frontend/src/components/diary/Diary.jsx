@@ -27,7 +27,7 @@ const MOODS = [
 export default function Diary() {
   const theme = useTheme();
   const t = theme.palette._;
-  const { diaries, addDiary, generateCalebDiary } = useDiaryStore();
+  const { diaries, addDiary, generateCalebDiary, replyToDiary } = useDiaryStore();
   const persona = useMemoryStore((s) => s.persona);
   const [tab, setTab] = useState(0); // 0=Caleb, 1=Yoren
   const [writing, setWriting] = useState(false);
@@ -86,14 +86,14 @@ export default function Diary() {
         </Box>
       ) : (
         list.map((d) => (
-          <DiaryCard key={d.id} d={d} t={t} expanded={expanded === d.id} onToggle={() => setExpanded(expanded === d.id ? null : d.id)} />
+          <DiaryCard key={d.id} d={d} t={t} expanded={expanded === d.id} onToggle={() => setExpanded(expanded === d.id ? null : d.id)} onReply={replyToDiary} />
         ))
       )}
     </Box>
   );
 }
 
-function DiaryCard({ d, t, expanded, onToggle }) {
+function DiaryCard({ d, t, expanded, onToggle, onReply }) {
   const date = new Date(d.date);
   const dateStr = `${date.getMonth() + 1}月${date.getDate()}日`;
   const weatherObj = WEATHERS.find((w) => w.id === d.weather);
@@ -132,21 +132,83 @@ function DiaryCard({ d, t, expanded, onToggle }) {
 
           {/* Yoren 回复区（Caleb 的日记） */}
           {d.author === 'caleb' && (
-            <Box sx={{ mt: 1.5 }}>
-              {d.calebReply ? (
-                <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: t.subtle, border: `1px solid ${t.border}` }}>
-                  <Typography sx={{ fontSize: '0.72rem', color: t.accent, fontWeight: 600, mb: 0.5 }}>Yoren 的回复</Typography>
-                  <Typography sx={{ fontSize: '0.8rem', color: t.text, lineHeight: 1.7 }}>{d.calebReply}</Typography>
-                </Box>
-              ) : (
-                <Typography sx={{ fontSize: '0.72rem', color: t.muted, fontStyle: 'italic' }}>
-                  点击回复 Caleb 的日记（预留）
-                </Typography>
-              )}
-            </Box>
+            <YorenReplyBox d={d} t={t} onReply={onReply} />
           )}
         </Box>
       </Collapse>
+    </Box>
+  );
+}
+
+// Yoren 给 Caleb 日记的留言框：无回复时输入，有回复时展示并支持编辑
+function YorenReplyBox({ d, t, onReply }) {
+  const [editing, setEditing] = useState(false);
+  const [text, setText] = useState(d.calebReply || '');
+
+  // 进入展开态时，如果没有回复则默认进入编辑模式
+  useEffect(() => {
+    if (!d.calebReply) setEditing(true);
+    setText(d.calebReply || '');
+  }, [d.calebReply]);
+
+  const handleSend = () => {
+    const trimmed = text.trim();
+    if (!trimmed) return;
+    onReply(d.id, trimmed);
+    setEditing(false);
+  };
+
+  if (editing || !d.calebReply) {
+    return (
+      <Box sx={{ mt: 1.5 }} onClick={(e) => e.stopPropagation()}>
+        <Typography sx={{ fontSize: '0.72rem', color: t.accent, fontWeight: 600, mb: 0.5 }}>
+          {d.calebReply ? '编辑回复' : '给 Caleb 留言'}
+        </Typography>
+        <TextField
+          value={text}
+          onChange={(e) => setText(e.target.value)}
+          multiline
+          minRows={2}
+          maxRows={5}
+          fullWidth
+          placeholder="写点什么..."
+          sx={{
+            '& .MuiOutlinedInput-root': {
+              bgcolor: t.subtle, color: t.text, fontSize: '0.82rem', lineHeight: 1.6,
+              borderRadius: 2, '& fieldset': { borderColor: t.border },
+              '&.Mui-focused fieldset': { borderColor: t.accent },
+            },
+          }}
+        />
+        <Box sx={{ display: 'flex', gap: 1, mt: 1 }}>
+          {d.calebReply && (
+            <Button size="small" onClick={() => { setText(d.calebReply); setEditing(false); }}
+              sx={{ color: t.muted, textTransform: 'none', fontSize: '0.78rem' }}>
+              取消
+            </Button>
+          )}
+          <Button size="small" onClick={handleSend} disabled={!text.trim()}
+            sx={{ color: t.accent, textTransform: 'none', fontWeight: 600, fontSize: '0.78rem' }}>
+            {d.calebReply ? '保存' : '发送'}
+          </Button>
+        </Box>
+      </Box>
+    );
+  }
+
+  return (
+    <Box sx={{ mt: 1.5 }} onClick={(e) => e.stopPropagation()}>
+      <Box sx={{ p: 1.5, borderRadius: 2, bgcolor: t.subtle, border: `1px solid ${t.border}` }}>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 0.5 }}>
+          <Typography sx={{ fontSize: '0.72rem', color: t.accent, fontWeight: 600 }}>Yoren 的回复</Typography>
+          <Button size="small" startIcon={<EditIcon sx={{ fontSize: 14 }} />}
+            onClick={() => setEditing(true)}
+            sx={{ color: t.muted, textTransform: 'none', fontSize: '0.72rem', minWidth: 'auto', py: 0.25 }}>
+            编辑
+          </Button>
+        </Box>
+        <Typography sx={{ fontSize: '0.8rem', color: t.text, lineHeight: 1.7, whiteSpace: 'pre-wrap' }}>{d.calebReply}</Typography>
+      </Box>
     </Box>
   );
 }

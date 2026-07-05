@@ -3,7 +3,7 @@
   box-sizing: border-box;
 }
 
-/* 三种字体方案：通过 data-font 属性切换 */
+/* 字体方案：通过 data-font 属性切换 */
 :root,
 [data-font='system'] {
   --font-app: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC',
@@ -15,6 +15,18 @@
 }
 [data-font='noto-serif'] {
   --font-app: 'Noto Serif SC', Georgia, 'Songti SC', 'SimSun', serif;
+}
+[data-font='lxgw'] {
+  --font-app: 'LXGW WenKai TC', 'LXGW WenKai', -apple-system, 'PingFang SC',
+    'Microsoft YaHei', sans-serif;
+}
+[data-font='zcool'] {
+  --font-app: 'ZCOOL KuaiLe', -apple-system, 'PingFang SC', 'Microsoft YaHei',
+    sans-serif;
+}
+[data-font='mono'] {
+  --font-app: 'JetBrains Mono', 'Fira Code', ui-monospace, Consolas, Monaco,
+    'Courier New', monospace;
 }
 
 html,

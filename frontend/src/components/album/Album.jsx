@@ -4,18 +4,30 @@ import { useTheme } from '@mui/material';
 import AddPhotoAlternateIcon from '@mui/icons-material/AddPhotoAlternate';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import CloseIcon from '@mui/icons-material/Close';
+import AddIcon from '@mui/icons-material/Add';
 import { useAlbumStore } from '../../store/albumStore.js';
 
 // 相册：手账本风格
 export default function Album() {
   const theme = useTheme();
   const t = theme.palette._;
-  const { photos, categories, addPhoto, deletePhoto } = useAlbumStore();
+  const { photos, categories, addPhoto, deletePhoto, addCategory } = useAlbumStore();
   const [cat, setCat] = useState('全部');
   const [addOpen, setAddOpen] = useState(false);
   const [viewPhoto, setViewPhoto] = useState(null);
+  const [catDialogOpen, setCatDialogOpen] = useState(false);
+  const [newCat, setNewCat] = useState('');
 
   const list = cat === '全部' ? photos : photos.filter((p) => p.category === cat);
+
+  const handleCreateCat = () => {
+    const trimmed = newCat.trim();
+    if (!trimmed) return;
+    addCategory(trimmed);
+    setNewCat('');
+    setCatDialogOpen(false);
+    setCat(trimmed);
+  };
 
   return (
     <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto', px: 2, py: 2 }}>
@@ -35,7 +47,7 @@ export default function Album() {
       </Box>
 
       {/* 分类标签 */}
-      <Box sx={{ display: 'flex', gap: 0.75, mb: 2, flexWrap: 'wrap' }}>
+      <Box sx={{ display: 'flex', gap: 0.75, mb: 2, flexWrap: 'wrap', alignItems: 'center' }}>
         {categories.map((c) => (
           <Chip
             key={c}
@@ -51,6 +63,21 @@ export default function Album() {
             }}
           />
         ))}
+        {/* 新增分类按钮 */}
+        <IconButton
+          size="small"
+          onClick={() => setCatDialogOpen(true)}
+          aria-label="新增分类"
+          title="新增分类"
+          sx={{
+            width: 26, height: 26, borderRadius: 1,
+            border: `1px dashed ${t.border}`,
+            color: t.muted,
+            '&:hover': { color: t.accent, borderColor: t.accent, bgcolor: t.accentSoft },
+          }}
+        >
+          <AddIcon sx={{ fontSize: 16 }} />
+        </IconButton>
       </Box>
 
       {/* 照片网格（手账本风格） */}
@@ -107,6 +134,34 @@ export default function Album() {
       {addOpen && (
         <AddPhotoDialog t={t} categories={categories} onClose={() => setAddOpen(false)} onSave={addPhoto} />
       )}
+
+      {/* 新增分类对话框 */}
+      <Dialog open={catDialogOpen} onClose={() => setCatDialogOpen(false)} fullWidth maxWidth="xs"
+        PaperProps={{ sx: { bgcolor: t.surface, borderRadius: 3 } }}>
+        <DialogTitle sx={{ fontSize: '0.95rem', color: t.text }}>新增分类</DialogTitle>
+        <DialogContent>
+          <TextField
+            autoFocus
+            value={newCat}
+            onChange={(e) => setNewCat(e.target.value)}
+            onKeyDown={(e) => { if (e.key === 'Enter') handleCreateCat(); }}
+            size="small" fullWidth placeholder="输入分类名"
+            sx={{
+              mt: 0.5,
+              '& .MuiOutlinedInput-root': {
+                bgcolor: t.subtle, color: t.text, fontSize: '0.85rem',
+                '& fieldset': { borderColor: t.border },
+                '&.Mui-focused fieldset': { borderColor: t.accent },
+              },
+            }}
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setCatDialogOpen(false)} sx={{ color: t.muted, textTransform: 'none' }}>取消</Button>
+          <Button onClick={handleCreateCat} disabled={!newCat.trim()}
+            sx={{ color: t.accent, textTransform: 'none', fontWeight: 600 }}>创建</Button>
+        </DialogActions>
+      </Dialog>
 
       {/* 查看照片 */}
       {viewPhoto && (
