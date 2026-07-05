@@ -29,6 +29,10 @@ import CheckIcon from '@mui/icons-material/Check';
 import { useColorMode, useFont, useAccent } from '../../App.jsx';
 import { ACCENTS } from '../../theme/theme.js';
 import MemoryPool from '../memory/MemoryPool.jsx';
+import SortableToolList from './SortableToolList.jsx';
+import { useToolOrderStore } from '../../store/toolOrderStore.js';
+import DragHandleIcon from '@mui/icons-material/DragHandle';
+import RestartAltIcon from '@mui/icons-material/RestartAlt';
 
 // 工具箱浮层：齿轮按钮触发，8 大入口（美化置顶）
 export default function Toolbox({ open, anchorEl, onClose }) {
@@ -38,9 +42,10 @@ export default function Toolbox({ open, anchorEl, onClose }) {
   const { font, setFont, fonts } = useFont();
   const { accent, setAccent, accents } = useAccent();
   const [activeTool, setActiveTool] = useState(null);
+  const { order, setOrder, resetOrder } = useToolOrderStore();
 
-  // 8 大功能入口（美化置顶）
-  const tools = [
+  // 8 大功能入口（默认顺序）
+  const defaultTools = [
     { id: 'beautify', name: '美化', icon: <PaletteIcon />, desc: '主题、字体与配色' },
     { id: 'companion', name: '伙伴状态', icon: <FavoriteIcon />, desc: '查看伙伴在线状态' },
     { id: 'games', name: '小游戏', icon: <SportsEsportsIcon />, desc: '一起来玩个小游戏' },
@@ -50,6 +55,11 @@ export default function Toolbox({ open, anchorEl, onClose }) {
     { id: 'calendar', name: '日历记录本', icon: <CalendarMonthIcon />, desc: '记下每一天' },
     { id: 'memory', name: '记忆池', icon: <PsychologyIcon />, desc: '共同记忆收藏' },
   ];
+
+  // 按用户存储的顺序重排（order 为 null 时用默认顺序）
+  const tools = order
+    ? order.map((id) => defaultTools.find((t) => t.id === id)).filter(Boolean)
+    : defaultTools;
 
   const activeToolObj = tools.find((x) => x.id === activeTool);
 
@@ -83,48 +93,48 @@ export default function Toolbox({ open, anchorEl, onClose }) {
         <Typography sx={{ fontWeight: 600, fontSize: '0.95rem', color: t.text }}>
           {activeToolObj ? activeToolObj.name : '工具箱'}
         </Typography>
-        <IconButton
-          size="small"
-          onClick={() => (activeTool ? setActiveTool(null) : onClose())}
-          sx={{ color: t.muted, '&:hover': { color: t.text, bgcolor: t.subtle } }}
-        >
-          {activeTool ? <SettingsIcon sx={{ fontSize: 18 }} /> : <CloseIcon sx={{ fontSize: 18 }} />}
-        </IconButton>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+          {/* 列表模式下显示"重置顺序"按钮 */}
+          {!activeTool && order && (
+            <IconButton
+              size="small"
+              onClick={() => resetOrder()}
+              title="重置为默认顺序"
+              sx={{ color: t.muted, '&:hover': { color: t.accent, bgcolor: t.subtle } }}
+            >
+              <RestartAltIcon sx={{ fontSize: 18 }} />
+            </IconButton>
+          )}
+          <IconButton
+            size="small"
+            onClick={() => (activeTool ? setActiveTool(null) : onClose())}
+            sx={{ color: t.muted, '&:hover': { color: t.text, bgcolor: t.subtle } }}
+          >
+            {activeTool ? <SettingsIcon sx={{ fontSize: 18 }} /> : <CloseIcon sx={{ fontSize: 18 }} />}
+          </IconButton>
+        </Box>
       </Box>
+
+      {/* 列表模式下的拖拽提示 */}
+      {!activeTool && (
+        <Box sx={{ px: 2, py: 1, display: 'flex', alignItems: 'center', gap: 0.75 }}>
+          <DragHandleIcon sx={{ fontSize: 14, color: t.muted, opacity: 0.7 }} />
+          <Typography sx={{ fontSize: '0.7rem', color: t.muted, opacity: 0.7 }}>
+            长按手柄拖动可调整顺序
+          </Typography>
+        </Box>
+      )}
 
       {/* 内容区 */}
       {!activeTool ? (
-        // 默认：入口列表
-        <List sx={{ p: 0.5, overflowY: 'auto', flex: 1 }}>
-          {tools.map((tool) => (
-            <ListItemButton
-              key={tool.id}
-              onClick={() => setActiveTool(tool.id)}
-              sx={{
-                borderRadius: 2,
-                mx: 0.5,
-                my: 0.25,
-                px: 1.5,
-                py: 1.25,
-                '&:hover': { bgcolor: t.subtle },
-              }}
-            >
-              <ListItemIcon sx={{ minWidth: 40, color: t.accent, '& svg': { fontSize: 22 } }}>
-                {tool.icon}
-              </ListItemIcon>
-              <ListItemText
-                primary={
-                  <Typography sx={{ fontSize: '0.88rem', fontWeight: 500, color: t.text }}>
-                    {tool.name}
-                  </Typography>
-                }
-                secondary={
-                  <Typography sx={{ fontSize: '0.72rem', color: t.muted }}>{tool.desc}</Typography>
-                }
-              />
-            </ListItemButton>
-          ))}
-        </List>
+        // 默认：可拖拽排序的入口列表
+        <Box sx={{ flex: 1, minHeight: 0, overflowY: 'auto' }}>
+          <SortableToolList
+            tools={tools}
+            onReorder={setOrder}
+            onSelect={setActiveTool}
+          />
+        </Box>
       ) : activeTool === 'beautify' ? (
         // 美化面板
         <Box sx={{ overflowY: 'auto', flex: 1, px: 2, py: 2 }}>
