@@ -23,16 +23,22 @@ export default function TopBar() {
         sx={{
           bgcolor: t.surface,
           backgroundImage: 'none',
-          borderBottom: `1px solid ${t.border}`,
+          borderBottom: 'none',
           boxShadow: 'none',
+          '&::after': {
+            content: '""',
+            display: 'block',
+            height: 1,
+            backgroundImage: `linear-gradient(90deg, transparent 0%, ${t.border} 15%, ${t.border} 85%, transparent 100%)`,
+          },
         }}
       >
-        <Toolbar sx={{ minHeight: { xs: 52, md: 56 }, px: { xs: 1.5, md: 2 } }}>
+        <Toolbar sx={{ minHeight: 56, height: 56, px: { xs: 1.5, md: 2 } }}>
           <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1, minWidth: 0 }}>
             <Typography
               variant="h6"
               noWrap
-              sx={{ color: t.text, fontWeight: 600, fontSize: { xs: '1rem', md: '1.05rem' } }}
+              sx={{ color: t.text, fontWeight: 600, fontSize: '1.05rem' }}
             >
               Caleb
             </Typography>

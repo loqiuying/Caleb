@@ -96,13 +96,13 @@ export const ACCENTS = {
 // 基础 token（不含 accent 相关，accent 由预设注入）
 const baseTokens = {
   light: {
-    bg: '#EDEDED', surface: '#FFFFFF', subtle: '#F5F5F5', border: '#E5E5E5',
+    bg: '#f0f0f2', surface: '#FFFFFF', subtle: '#F5F5F5', border: '#E5E5E5',
     text: '#1A1A1A', muted: '#888888',
     codeBg: '#1e1e2e', codeText: '#cdd6f4',
     bubbleAi: '#FFFFFF', bubbleAiText: '#1A1A1A', bubbleAiBorder: '#E5E5E5',
   },
   dark: {
-    bg: '#111111', surface: '#1F1F1F', subtle: '#2A2A2A', border: '#2E2E2E',
+    bg: '#0f0f0f', surface: '#1F1F1F', subtle: '#2A2A2A', border: '#2E2E2E',
     text: '#E6E6E6', muted: '#999999',
     codeBg: '#11111b', codeText: '#cdd6f4',
     bubbleAi: '#2A2A2A', bubbleAiText: '#E6E6E6', bubbleAiBorder: '#2E2E2E',
@@ -137,7 +137,7 @@ export function getTheme(mode = 'dark', accentId = 'green') {
       warning: { main: '#FA9D3B' },
       info:    { main: t.accent },
     },
-    shape: { borderRadius: 8 },
+    shape: { borderRadius: 10 },
     shadows: mode === 'dark'
       ? ['none','0 1px 2px rgba(0,0,0,0.4)','0 1px 3px rgba(0,0,0,0.5)','0 2px 6px rgba(0,0,0,0.5)','0 4px 12px rgba(0,0,0,0.55)','0 6px 16px rgba(0,0,0,0.6)','0 8px 24px rgba(0,0,0,0.6)','0 12px 32px rgba(0,0,0,0.65)',...Array(17).fill('0 16px 40px rgba(0,0,0,0.7)')]
       : ['none','0 1px 2px rgba(0,0,0,0.06)','0 1px 3px rgba(0,0,0,0.08)','0 2px 6px rgba(0,0,0,0.08)','0 4px 12px rgba(0,0,0,0.1)','0 6px 16px rgba(0,0,0,0.1)','0 8px 24px rgba(0,0,0,0.12)','0 12px 32px rgba(0,0,0,0.12)',...Array(17).fill('0 16px 40px rgba(0,0,0,0.14)')],
@@ -148,17 +148,17 @@ export function getTheme(mode = 'dark', accentId = 'green') {
       button: { textTransform: 'none', fontWeight: 600 },
     },
     components: {
-      MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: { borderRadius: 8 } } },
+      MuiButton: { defaultProps: { disableElevation: true }, styleOverrides: { root: { borderRadius: 10 } } },
       MuiPaper: { styleOverrides: { root: { backgroundImage: 'none' } } },
-      MuiListItemButton: { styleOverrides: { root: { borderRadius: 8 } } },
+      MuiListItemButton: { styleOverrides: { root: { borderRadius: 10 } } },
       MuiAppBar: { styleOverrides: { root: { backgroundImage: 'none' } } },
       MuiOutlinedInput: { styleOverrides: { root: { '& .MuiOutlinedInput-notchedOutline': { borderColor: t.border } } } },
       MuiCssBaseline: {
         styleOverrides: {
           body: { backgroundColor: t.bg, transition: 'background-color 0.3s ease, color 0.3s ease' },
-          '*::-webkit-scrollbar': { width: 8, height: 8 },
+          '*::-webkit-scrollbar': { width: 6, height: 6 },
           '*::-webkit-scrollbar-track': { background: 'transparent' },
-          '*::-webkit-scrollbar-thumb': { background: mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: 8 },
+          '*::-webkit-scrollbar-thumb': { background: mode === 'dark' ? 'rgba(255,255,255,0.15)' : 'rgba(0,0,0,0.15)', borderRadius: 6 },
           '*::-webkit-scrollbar-thumb:hover': { background: mode === 'dark' ? 'rgba(255,255,255,0.25)' : 'rgba(0,0,0,0.25)' },
         },
       },

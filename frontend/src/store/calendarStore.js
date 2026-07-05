@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 const CAL_KEY = 'caleb-calendar';
+const SUMMARY_KEY = 'caleb-calendar-summary';
 
 // 记录类型：与图标/颜色对应
 export const RECORD_TYPES = {
@@ -38,8 +39,20 @@ function load() {
   return samples;
 }
 
+function loadSummary() {
+  try {
+    const r = localStorage.getItem(SUMMARY_KEY);
+    if (r) {
+      const obj = JSON.parse(r);
+      if (obj && typeof obj === 'object') return obj;
+    }
+  } catch(e){}
+  return {};
+}
+
 export const useCalendarStore = create((set, get) => ({
   records: load(),
+  monthlySummaries: loadSummary(),
 
   addRecord: (data) => {
     const rec = {
@@ -66,5 +79,11 @@ export const useCalendarStore = create((set, get) => ({
     const next = get().records.map((r) => r.id === id ? { ...r, ...patch } : r);
     set({ records: next });
     localStorage.setItem(CAL_KEY, JSON.stringify(next));
+  },
+
+  updateMonthlySummary: (monthKey, text) => {
+    const next = { ...get().monthlySummaries, [monthKey]: text };
+    set({ monthlySummaries: next });
+    try { localStorage.setItem(SUMMARY_KEY, JSON.stringify(next)); } catch(e) {}
   },
 }));

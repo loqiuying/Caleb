@@ -68,7 +68,7 @@ export default function MessageList({ messages, showTyping }) {
             margin: '0 auto',
             display: 'flex',
             flexDirection: 'column',
-            gap: { xs: 2, md: 2.5 },
+            gap: { xs: 1.5, md: 2 },
           }}
         >
           {messages.map((message, idx) => {
@@ -105,9 +105,14 @@ export default function MessageList({ messages, showTyping }) {
             height: 40,
             bgcolor: t.surface,
             color: t.accent,
-            border: `1px solid ${t.border}`,
-            boxShadow: 3,
-            '&:hover': { bgcolor: t.accentSoft, color: t.accent },
+            border: `1.5px solid ${t.accent}`,
+            boxShadow: `0 4px 16px ${t.accentSoft}, 0 2px 8px rgba(0,0,0,0.15)`,
+            '&:hover': {
+              bgcolor: t.accentSoft,
+              color: t.accent,
+              borderColor: t.accentHover,
+              transform: 'translateY(-1px)',
+            },
             transition: 'all 0.2s',
           }}
         >

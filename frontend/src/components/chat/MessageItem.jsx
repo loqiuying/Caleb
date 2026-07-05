@@ -18,17 +18,21 @@ export default function MessageItem({ message, showTime }) {
     <Box className="message-fade-in" sx={{ width: '100%' }}>
       {/* 时间戳：居中显示 */}
       {showTime && message.created_at && (
-        <Typography
-          sx={{
-            textAlign: 'center',
-            fontSize: '0.7rem',
-            color: t.muted,
-            mb: 1,
-            opacity: 0.8,
-          }}
-        >
-          {formatChatTime(message.created_at)}
-        </Typography>
+        <Box sx={{ textAlign: 'center', mb: 1 }}>
+          <Typography
+            component="span"
+            sx={{
+              fontSize: '0.7rem',
+              color: t.muted,
+              opacity: 0.85,
+              px: 1,
+              pb: 0.25,
+              borderBottom: `1px solid ${t.border}`,
+            }}
+          >
+            {formatChatTime(message.created_at)}
+          </Typography>
+        </Box>
       )}
 
       {/* 消息行：无头像，直接左右对齐 */}
@@ -37,13 +41,14 @@ export default function MessageItem({ message, showTime }) {
           display: 'flex',
           flexDirection: isUser ? 'row-reverse' : 'row',
           alignItems: 'flex-start',
+          gap: 2,
         }}
       >
         <Box
           sx={{
             display: 'flex',
             flexDirection: 'column',
-            maxWidth: { xs: '80%', sm: '78%', md: '68%' },
+            maxWidth: { xs: '82%', sm: '75%', md: '65%' },
             alignItems: isUser ? 'flex-end' : 'flex-start',
           }}
         >
@@ -51,15 +56,15 @@ export default function MessageItem({ message, showTime }) {
           <Box
             sx={{
               position: 'relative',
-              borderRadius: 2,
-              px: 2,
-              py: 1.25,
+              borderRadius: 3,
+              px: 2.5,
+              py: 1.5,
               bgcolor: isUser ? t.bubbleUser : t.bubbleAi,
               color: isUser ? t.bubbleUserText : t.bubbleAiText,
               border: isUser ? 'none' : `1px solid ${t.bubbleAiBorder}`,
               wordBreak: 'break-word',
-              borderTopRightRadius: isUser ? 0.5 : 2,
-              borderTopLeftRadius: isUser ? 2 : 0.5,
+              borderTopRightRadius: isUser ? 0.5 : 3,
+              borderTopLeftRadius: isUser ? 3 : 0.5,
               boxShadow: theme.palette.mode === 'light'
                 ? '0 1px 2px rgba(0,0,0,0.08)'
                 : '0 1px 2px rgba(0,0,0,0.3)',

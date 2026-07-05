@@ -42,6 +42,7 @@ body {
   font-family: var(--font-app);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'kern' 1;
   transition: background-color 0.3s ease, color 0.3s ease;
 }
 
@@ -52,15 +53,15 @@ body {
 
 /* 滚动条样式（深浅色由 MUI CssBaseline 控制，此处兜底） */
 ::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px;
+  height: 6px;
 }
 ::-webkit-scrollbar-track {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
   background: rgba(128, 128, 128, 0.3);
-  border-radius: 8px;
+  border-radius: 6px;
 }
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(128, 128, 128, 0.5);
