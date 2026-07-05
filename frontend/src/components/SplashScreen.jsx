@@ -1,8 +1,7 @@
 import { Box, Typography } from '@mui/material';
 import { useTheme } from '@mui/material';
-import SmartToyIcon from '@mui/icons-material/SmartToy';
 
-// 开屏加载页：加载条上方显示 Caleb 字样，2 秒后淡出
+// 开屏加载页：C+猫 图标 + CALEB 字样 + 进度条
 export default function SplashScreen() {
   const theme = useTheme();
   const t = theme.palette._;
@@ -21,22 +20,19 @@ export default function SplashScreen() {
         animation: 'splash-fade-out 0.5s ease-in 2s forwards',
       }}
     >
-      {/* Logo：圆角方形渐变 */}
+      {/* Logo：C+猫 图标 */}
       <Box
+        component="img"
+        src="/icons/icon-192.png"
+        alt="Caleb"
         sx={{
-          width: 84,
-          height: 84,
+          width: 88,
+          height: 88,
           borderRadius: 4,
-          background: `linear-gradient(135deg, ${t.accent} 0%, ${t.accentHover} 100%)`,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
           mb: 3,
           animation: 'logo-pulse 2s ease-in-out infinite',
         }}
-      >
-        <SmartToyIcon sx={{ color: '#ffffff', fontSize: 42 }} />
-      </Box>
+      />
 
       {/* Caleb 字样：大字号 + 大字距 + 渐变文字 */}
       <Typography

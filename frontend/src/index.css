@@ -115,11 +115,11 @@ body {
 @keyframes logo-pulse {
   0%, 100% {
     transform: scale(1);
-    box-shadow: 0 0 30px rgba(7, 193, 96, 0.35);
+    box-shadow: 0 0 20px rgba(128, 128, 128, 0.2);
   }
   50% {
     transform: scale(1.06);
-    box-shadow: 0 0 50px rgba(7, 193, 96, 0.6);
+    box-shadow: 0 0 40px rgba(128, 128, 128, 0.35);
   }
 }
 

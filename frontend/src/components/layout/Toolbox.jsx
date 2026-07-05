@@ -64,9 +64,12 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
     { id: 'memory', name: '记忆池', icon: <PsychologyIcon />, desc: '共同记忆收藏' },
   ];
 
-  // 按用户存储的顺序重排（order 为 null 时用默认顺序）
+  // 按用户存储的顺序重排，缺失的入口补到末尾（兼容新增入口）
   const tools = order
-    ? order.map((id) => defaultTools.find((t) => t.id === id)).filter(Boolean)
+    ? [
+        ...order.map((id) => defaultTools.find((t) => t.id === id)).filter(Boolean),
+        ...defaultTools.filter((t) => !order.includes(t.id)),
+      ]
     : defaultTools;
 
   const activeToolObj = tools.find((x) => x.id === activeTool);
@@ -81,19 +84,12 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   return (
     <Box
       sx={{
-        width: widePanel
-          ? { xs: '100vw', sm: 480 }
-          : { xs: '100vw', sm: 340 },
-        maxWidth: widePanel ? { xs: '100vw', sm: 520 } : 380,
-        height: { xs: '100vh', sm: 'auto' },
-        maxHeight: { xs: '100vh', sm: '82vh' },
+        width: '100%',
+        height: '100vh',
         display: 'flex',
         flexDirection: 'column',
         bgcolor: t.surface,
-        borderRadius: { xs: 0, sm: 3 },
         overflow: 'hidden',
-        border: { xs: 'none', sm: `1px solid ${t.border}` },
-        boxShadow: 6,
       }}
       onClick={(e) => e.stopPropagation()}
     >
