@@ -6,7 +6,7 @@
 
 | 组件 | 技术 | 部署平台 |
 |------|------|---------|
-| 前端 | React + Vite + MUI v5 + Zustand | Vercel |
+| 前端 | React + Vite + MUI v5 + Zustand | Cloudflare Pages |
 | 后端 | Node.js + Express | Render |
 | 数据库 | PostgreSQL | Supabase |
 | AI 模型 | DeepSeek（对话 + 记忆压缩） | DeepSeek API |
