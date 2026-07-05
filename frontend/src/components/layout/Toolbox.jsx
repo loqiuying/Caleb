@@ -35,6 +35,9 @@ import WeatherPanel from '../weather/WeatherPanel.jsx';
 import Album from '../album/Album.jsx';
 import Diary from '../diary/Diary.jsx';
 import Calendar from '../calendar/Calendar.jsx';
+import MiniGames from '../games/MiniGames.jsx';
+import StudyPanel from '../study/StudyPanel.jsx';
+import InteractPanel from '../interact/InteractPanel.jsx';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import EditNoteIcon from '@mui/icons-material/EditNote';
 import SortableToolList from './SortableToolList.jsx';
@@ -88,7 +91,7 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
   const panelTitle = activeToolObj ? activeToolObj.name : (titleMap[activeTool] || '工具箱');
 
   // 面板内容区是否需要更宽
-  const widePanel = ['memory', 'companion', 'address', 'weather', 'album', 'diary', 'calendar'].includes(activeTool);
+  const widePanel = ['memory', 'companion', 'address', 'weather', 'album', 'diary', 'calendar', 'games', 'study', 'interact'].includes(activeTool);
 
   return (
     <Box
@@ -299,6 +302,18 @@ export default function Toolbox({ open, anchorEl, onClose, initialTool }) {
       ) : activeTool === 'calendar' ? (
         <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
           <Calendar />
+        </Box>
+      ) : activeTool === 'games' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <MiniGames />
+        </Box>
+      ) : activeTool === 'study' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <StudyPanel />
+        </Box>
+      ) : activeTool === 'interact' ? (
+        <Box sx={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+          <InteractPanel />
         </Box>
       ) : (
         // 其他入口：占位
