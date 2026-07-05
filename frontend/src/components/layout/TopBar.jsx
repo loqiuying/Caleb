@@ -43,7 +43,7 @@ export default function TopBar({ onMenuClick, showMenuButton }) {
           </IconButton>
         )}
 
-        {/* 标题 */}
+        {/* 标题 + 版本标记 */}
         <Box sx={{ display: 'flex', alignItems: 'center', gap: 1, flexGrow: 1, minWidth: 0 }}>
           <Typography
             variant="h6"
@@ -52,6 +52,20 @@ export default function TopBar({ onMenuClick, showMenuButton }) {
           >
             {title}
           </Typography>
+          <Box
+            sx={{
+              bgcolor: '#ef4444',
+              color: '#fff',
+              fontSize: '0.6rem',
+              fontWeight: 700,
+              px: 0.6,
+              py: 0.15,
+              borderRadius: 1,
+              lineHeight: 1,
+            }}
+          >
+            v5
+          </Box>
         </Box>
 
         {/* 右侧：在线状态点 + 齿轮按钮 */}
